@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="Carter" />
+    <PackageReference Include="Mapster" />
+    <PackageReference Include="Swashbuckle.AspNetCore" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\Application\Application.csproj" />
+  </ItemGroup>
+</Project>
