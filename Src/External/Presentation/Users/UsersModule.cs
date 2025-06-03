@@ -15,7 +15,8 @@ public class UsersModule : CarterModule
     public UsersModule()
         : base("/users")
     {
-        
+        WithTags("Users");
+        // RequireAuthorization();
     }
 
     public override void AddRoutes(IEndpointRouteBuilder app)
@@ -31,7 +32,7 @@ public class UsersModule : CarterModule
             Result<Guid> result = await handler.Handle(command, cancellationToken);
 
             return result.IsSuccess ? Results.Ok(result.Value) : Results.BadRequest(result.Error);
-        }).WithTags("Users");
+        });
 
         app.MapPost("/login", async (
             LoginUserRequest request,
@@ -43,7 +44,7 @@ public class UsersModule : CarterModule
             Result<string> result = await handler.Handle(command, cancellationToken);
 
             return result.IsSuccess ? Results.Ok(result.Value) : Results.BadRequest(result.Error);
-        }).WithTags("Users");
+        });
 
     }
 

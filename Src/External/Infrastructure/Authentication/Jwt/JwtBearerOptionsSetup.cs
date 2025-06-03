@@ -5,20 +5,18 @@ using System.Text;
 
 namespace Infrastructure.Authentication.Jwt;
 
-public class JwtBearerOptionsSetup(IOptions<JwtSettings> jwtSettingsOptions) : IConfigureOptions<JwtBearerOptions>
+public class JwtBearerOptionsSetup(JwtSettings jwtSettings) : IConfigureOptions<JwtBearerOptions>
 {
-    private readonly JwtSettings _jwtSettings = jwtSettingsOptions.Value;
-    
     public void Configure(JwtBearerOptions options)
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret)),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret)),
             ValidateIssuer = true,
-            ValidIssuer = _jwtSettings.Issuer,
+            ValidIssuer = jwtSettings.Issuer,
             ValidateAudience = true,
-            ValidAudience = _jwtSettings.Audience,
+            ValidAudience = jwtSettings.Audience,
             ValidateLifetime = true,
             ClockSkew = TimeSpan.Zero
         };

@@ -10,21 +10,18 @@ using System.Text;
 namespace Infrastructure.Authentication.Jwt;
 
 internal sealed class JwtTokenProvider(
-    IOptions<JwtSettings> options,
+    JwtSettings jwtSettings,
     IPermissionService permissionService) : IJwtTokenProvider
 {
-    private readonly JwtSettings _jwtSettings = options.Value;
-    private readonly IPermissionService _permissionService = permissionService;
-
     public async Task<string> GenerateAsync(User user)
     {
-        string secretKey = _jwtSettings.Secret;
+        string secretKey = jwtSettings.Secret;
 
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
 
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-        var permissions = await _permissionService.GetPermissionsAsync(user.Id);
+        var permissions = await permissionService.GetPermissionsAsync(user.Id);
 
         var claims = new List<Claim>
         {
@@ -40,10 +37,10 @@ internal sealed class JwtTokenProvider(
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.UtcNow.AddMinutes(_jwtSettings.ExpirationInMinutes),
+            Expires = DateTime.UtcNow.AddMinutes(jwtSettings.ExpirationInMinutes),
             SigningCredentials = credentials,
-            Issuer = _jwtSettings.Issuer,
-            Audience = _jwtSettings.Audience
+            Issuer = jwtSettings.Issuer,
+            Audience = jwtSettings.Audience
         };
 
         var handler = new JsonWebTokenHandler();

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Quartz;
 using SharedKernal.Abstractions;
 
@@ -28,7 +29,14 @@ public static class DependencyInjection
 
     private static IServiceCollection AddAuthenticationInternal(this IServiceCollection services)
     {
-        services.ConfigureOptions<JwtSettingsSetup>();
+        services.AddOptions<JwtSettings>()
+            .BindConfiguration(nameof(JwtSettings))
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+
+        services.AddSingleton(sp =>
+            sp.GetRequiredService<IOptions<JwtSettings>>().Value);
+
         services.ConfigureOptions<JwtBearerOptionsSetup>();
 
         services
