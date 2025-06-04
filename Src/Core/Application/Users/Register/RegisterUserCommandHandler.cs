@@ -15,25 +15,29 @@ internal sealed class RegisterUserCommandHandler(
         RegisterUserCommand command,
         CancellationToken cancellationToken)
     {
-        var userNameResult = UserName.Create(command.Username);
+        Result<UserName> userNameResult = UserName.Create(command.Username);
 
-        if (userNameResult.IsFailure) return Result.Failure<Guid>(userNameResult.Error);
+        Result<Email> emailResult = Email.Create(command.Email);
 
-        var emailResult = Email.Create(command.Email);
+        if (Result.ContainsErrors(out Error[] errors, userNameResult, emailResult))
+        {
+            return Result.Failure<Guid>(errors);
+        }
 
-        if (emailResult.IsFailure) return Result.Failure<Guid>(emailResult.Error);
+        bool isEmailExists = await repository.IsEmailExistsAsync(emailResult.Value, cancellationToken);
 
-        var isEmailExists = await repository.IsEmailExistsAsync(emailResult.Value, cancellationToken);
-
-        var userResult = User.Create(Guid.NewGuid()
+        Result<User> userResult = User.Create(Guid.NewGuid()
             , userNameResult.Value
             , emailResult.Value
             , passwordHasher.Hash(command.Password),
             isEmailExists);
 
-        if (userResult.IsFailure) return Result.Failure<Guid>(userResult.Error);
+        if (userResult.IsFailure)
+        {
+            return Result.Failure<Guid>(userResult.Errors);
+        }
 
-        var user = userResult.Value;
+        User user = userResult.Value;
 
         user.Raise(new UserRegisteredDomainEvent(user.Id));
 

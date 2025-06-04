@@ -1,4 +1,5 @@
 ﻿using SharedKernal.Primitives;
+using SharedKernal.Guards;
 
 namespace Domain.Users;
 
@@ -17,13 +18,12 @@ public sealed class UserName : ValueObject
     }
 
     public static Result<UserName> Create(string username)
-        => Result
-            .Create(username)
-            .Ensure(
-                n => !string.IsNullOrWhiteSpace(n),
-                UserNameErrors.UserNameEmpty)
-            .Ensure(
-                n => username.Length <= UserConsts.MaxUserNameLength && username.Length >= UserConsts.MinUserNameLength,
-                UserNameErrors.UserNameInvalidLength)
+        => Result.Combine(
+                Result.Ensure(
+                    username,
+                    (Check.NotEmpty(), UserNameErrors.UserNameEmpty),
+                    (Check.ValidLength(UserConsts.MinUserNameLength, UserConsts.MaxUserNameLength), UserNameErrors.UserNameInvalidLength)
+                )
+            )
             .Map(n => new UserName(n));
 }

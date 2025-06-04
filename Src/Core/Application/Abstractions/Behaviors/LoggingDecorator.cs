@@ -27,7 +27,7 @@ internal static class LoggingDecorator
             }
             else
             {
-                using (LogContext.PushProperty("Error", result.Error, true))
+                using (LogContext.PushProperty("Error", result.Errors, true))
                 {
                     logger.LogError("Completed command {Command} with error", commandName);
                 }
@@ -57,7 +57,7 @@ internal static class LoggingDecorator
             }
             else
             {
-                using (LogContext.PushProperty("Error", result.Error, true))
+                using (LogContext.PushProperty("Error", result.Errors, true))
                 {
                     logger.LogError("Completed command {Command} with error", commandName);
                 }
@@ -87,7 +87,7 @@ internal static class LoggingDecorator
             }
             else
             {
-                using (LogContext.PushProperty("Error", result.Error, true))
+                using (LogContext.PushProperty("Error", result.Errors, true))
                 {
                     logger.LogError("Completed query {Query} with error", queryName);
                 }

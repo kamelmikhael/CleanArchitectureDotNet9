@@ -5,6 +5,7 @@ using Carter;
 using Mapster;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using SharedKernal.Primitives;
 
@@ -31,7 +32,7 @@ public class UsersModule : CarterModule
 
             Result<Guid> result = await handler.Handle(command, cancellationToken);
 
-            return result.IsSuccess ? Results.Ok(result.Value) : Results.BadRequest(result.Error);
+            return ResultsResponse.Handle(result);
         });
 
         app.MapPost("/login", async (
@@ -43,7 +44,7 @@ public class UsersModule : CarterModule
 
             Result<string> result = await handler.Handle(command, cancellationToken);
 
-            return result.IsSuccess ? Results.Ok(result.Value) : Results.BadRequest(result.Error);
+            return ResultsResponse.Handle(result);
         });
 
     }

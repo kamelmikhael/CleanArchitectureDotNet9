@@ -43,7 +43,7 @@ public class RegisterUserCommandHandlerTests
 
         //Assert
         result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be(UserErrors.EmailNotUnique);
+        result.Errors.Should().Contain(UserErrors.EmailNotUnique);
         _userRepositoryMock.Verify(
             repo => repo.Add(It.IsAny<User>()), 
             Times.Never);

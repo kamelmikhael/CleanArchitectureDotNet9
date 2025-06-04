@@ -1,4 +1,5 @@
-﻿using SharedKernal.Primitives;
+﻿using SharedKernal.Guards;
+using SharedKernal.Primitives;
 
 namespace Domain.Users;
 
@@ -17,16 +18,13 @@ public sealed class Email : ValueObject
     }
 
     public static Result<Email> Create(string email)
-        => Result
-            .Create(email)
-            .Ensure(
-                e => !string.IsNullOrWhiteSpace(e),
-                EmailErrors.EmailEmpty)
-            .Ensure(
-                e => e.Length <= UserConsts.MaxEmailLength && e.Length >= UserConsts.MinEmailLength,
-                EmailErrors.EmailInvalidLength)
-            .Ensure(
-                e => e.Split('@').Length == 2,
-                EmailErrors.EmailInvalidFormat)
+        => Result.Combine(
+                Result.Ensure( // Ensure not empty
+                    email,
+                    (Check.NotEmpty(), EmailErrors.EmailEmpty),
+                    (Check.ValidLength(UserConsts.MinEmailLength, UserConsts.MaxEmailLength), EmailErrors.EmailInvalidLength),
+                    (Check.ValidEmailFormat(), EmailErrors.EmailInvalidFormat)
+                )
+            )
             .Map(e => new Email(e));
 }
