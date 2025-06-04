@@ -62,6 +62,12 @@ public sealed class CachedUserRepository(
         });
     }
 
+    public Task<(IEnumerable<User>, int)> GetListWithPagingAsync(
+        string? keyword, int page, int pageSize, CancellationToken cancellationToken = default)
+    {
+        return decorated.GetListWithPagingAsync(keyword, page, pageSize, cancellationToken);
+    }
+
     public Task<bool> IsEmailExistsAsync(Email email, CancellationToken cancellationToken = default)
     {
        return decorated.IsEmailExistsAsync(email, cancellationToken);

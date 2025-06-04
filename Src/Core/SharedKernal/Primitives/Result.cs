@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SharedKernal.Primitives;
 
@@ -17,7 +18,7 @@ public class Result
         }
 
         IsSuccess = isSuccess;
-        Errors = new[] { error };
+        Errors = [error];
     }
 
     protected internal Result(bool isSuccess, Error[] errors)
@@ -30,7 +31,9 @@ public class Result
 
     public bool IsFailure => !IsSuccess;
 
-    public Error[] Errors { get; } = [];
+    public Error[] Errors { get; private set; } = [];
+
+    public void ClearErrors() => Errors = [];
 
     public static Result Success() => new(true, Error.None);
 
@@ -86,28 +89,9 @@ public class Result
     {
         errors = results
             .Where(r => r.IsFailure && r.Errors.Length > 0)
-            .SelectMany(r => r.Errors.Where(err => !string.IsNullOrEmpty(err.Code)))
+            .SelectMany(r => r.Errors.Where(err => err != Error.None))
             .ToArray();
 
         return errors.Length > 0;
     }
-}
-
-public class Result<TValue> : Result
-{
-    public TValue Value { get; }
-
-    protected internal Result(TValue value, bool isSuccess, Error error)
-        : base(isSuccess, error)
-    {
-        Value = value;
-    }
-
-    protected internal Result(TValue value, bool isSuccess, Error[] errors)
-        : base(isSuccess, errors)
-    {
-        Value = value;
-    }
-
-    public static implicit operator Result<TValue>(TValue value) => Create(value);
 }

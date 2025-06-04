@@ -21,9 +21,9 @@ public class Repository<TEntity> : IRepository<TEntity>
         return _dbSet.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
 
-    public virtual Task<List<TEntity>> GetAllAsync(CancellationToken cancellationToken = default)
+    public virtual async Task<IEnumerable<TEntity>> GetListAsync(CancellationToken cancellationToken = default)
     {
-        return _dbSet.ToListAsync(cancellationToken);
+        return await _dbSet.ToListAsync(cancellationToken);
     }
 
     public virtual void Add(TEntity entity)

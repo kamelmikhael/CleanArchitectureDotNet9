@@ -6,13 +6,28 @@ namespace Presentation;
 
 internal static class ResultsResponse
 {
+    public static IResult Handle<T>(PagedResult<T> result)
+    {
+        if (result is { IsSuccess: true })
+        {
+            result.ClearErrors();
+
+            return Results.Ok(result);
+        }
+
+        return HandleFailure(result);
+    }
+
     public static IResult Handle<T>(Result<T> result)
     {
-        return result switch
+        if ( result is { IsSuccess: true })
         {
-            { IsSuccess: true } => Results.Ok(result.Value),
-            _ => HandleFailure(result)
-        };
+            result.ClearErrors();
+
+            return Results.Ok(result);
+        }
+
+        return HandleFailure(result);
     }
 
     public static IResult HandleFailure(Result result)

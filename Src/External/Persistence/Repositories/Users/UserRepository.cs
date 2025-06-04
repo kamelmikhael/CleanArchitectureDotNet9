@@ -1,6 +1,7 @@
 ﻿using Application.Users;
 using Domain.Users;
 using Microsoft.EntityFrameworkCore;
+using Persistence.Extensions;
 using Persistence.Specifications.Users;
 
 namespace Persistence.Repositories;
@@ -17,5 +18,24 @@ public sealed class UserRepository(ApplicationDbContext context)
     {
         return ApplySpecification(new UserUsernameSpecification(username))
             .FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public async Task<(IEnumerable<User>, int)> GetListWithPagingAsync(
+        string? keyword, 
+        int page, 
+        int pageSize, 
+        CancellationToken cancellationToken = default)
+    {
+        IQueryable<User> query = _dbSet
+            //.WhereIf(
+            //    !string.IsNullOrWhiteSpace(keyword), 
+            //    x => x.Username.Value.Contains(keyword!) || x.Email.Value.Contains(keyword!))
+            .AsNoTracking()
+            .AsQueryable();
+
+        return (
+            await query.Skip(page * pageSize).Take(pageSize).ToListAsync(cancellationToken),
+            await query.CountAsync(cancellationToken)
+        );
     }
 }

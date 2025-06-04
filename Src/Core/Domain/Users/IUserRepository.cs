@@ -13,4 +13,10 @@ public interface IUserRepository : IRepository<User>
     Task<bool> IsEmailExistsAsync(Email email, CancellationToken cancellationToken = default);
 
     Task<User?> GetByUsernameAsync(UserName username, CancellationToken cancellationToken = default);
+
+    Task<(IEnumerable<User>, int)> GetListWithPagingAsync(
+        string? keyword, 
+        int page, 
+        int pageSize, 
+        CancellationToken cancellationToken = default);
 }

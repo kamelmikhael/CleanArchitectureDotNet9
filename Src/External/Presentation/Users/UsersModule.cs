@@ -1,4 +1,5 @@
 ﻿using Application.Abstractions.Messaging;
+using Application.Users.GetWithPagination;
 using Application.Users.Login;
 using Application.Users.Register;
 using Carter;
@@ -22,6 +23,19 @@ public class UsersModule : CarterModule
 
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
+        app.MapPost(
+            "/search", async (
+            UserPagedRequest input,
+            IPagedQueryHandler<GetUsersWithPaginationQuery, UserPagedResponse> handler,
+            CancellationToken cancellationToken) =>
+            {
+                GetUsersWithPaginationQuery query = new(input);
+
+                PagedResult<UserPagedResponse> result = await handler.Handle(query, cancellationToken);
+
+                return ResultsResponse.Handle(result);
+            });
+
         app.MapPost(
             "/register", async (
             RegisterUserRequest request, 
