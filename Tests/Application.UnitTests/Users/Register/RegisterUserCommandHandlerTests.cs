@@ -4,6 +4,7 @@ using Application.Users.Register;
 using Domain.Users;
 using FluentAssertions;
 using Moq;
+using SharedKernal.Abstraction.EventBus;
 
 namespace Application.UnitTests.Users.Register;
 
@@ -12,12 +13,22 @@ public class RegisterUserCommandHandlerTests
     private readonly Mock<IUserRepository> _userRepositoryMock;
     private readonly Mock<IUnitOfWork> _unitOfWorkMock;
     private readonly Mock<IPasswordHasher> _passwordHasherMock;
+    private readonly Mock<IEventBusService> _eventBusServiceMock;
+
+    private readonly RegisterUserCommandHandler _handler;
 
     public RegisterUserCommandHandlerTests()
     {
         _userRepositoryMock = new();
         _unitOfWorkMock = new();
         _passwordHasherMock = new();
+        _eventBusServiceMock = new();
+
+        _handler = new RegisterUserCommandHandler(
+            _unitOfWorkMock.Object,
+            _userRepositoryMock.Object,
+            _passwordHasherMock.Object,
+            _eventBusServiceMock.Object);
     }
 
     [Fact]
@@ -33,13 +44,8 @@ public class RegisterUserCommandHandlerTests
                 repo.IsEmailExistsAsync(emailResult.Value, It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
 
-        var handler = new RegisterUserCommandHandler(
-            _unitOfWorkMock.Object,
-            _userRepositoryMock.Object,
-            _passwordHasherMock.Object);
-
         //Act
-        var result = await handler.Handle(command, CancellationToken.None);
+        var result = await _handler.Handle(command, CancellationToken.None);
 
         //Assert
         result.IsFailure.Should().BeTrue();
@@ -65,13 +71,8 @@ public class RegisterUserCommandHandlerTests
                 repo.IsEmailExistsAsync(emailResult.Value, It.IsAny<CancellationToken>()))
             .ReturnsAsync(false);
 
-        var handler = new RegisterUserCommandHandler(
-            _unitOfWorkMock.Object,
-            _userRepositoryMock.Object,
-            _passwordHasherMock.Object);
-
         //Act
-        var result = await handler.Handle(command, CancellationToken.None);
+        var result = await _handler.Handle(command, CancellationToken.None);
 
         //Assert
         result.IsSuccess.Should().BeTrue();

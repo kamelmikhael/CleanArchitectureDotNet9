@@ -3,13 +3,15 @@ using SharedKernal.Abstractions.Data;
 using Application.Abstractions.Messaging;
 using Domain.Users;
 using SharedKernal.Primitives;
+using SharedKernal.Abstraction.EventBus;
 
 namespace Application.Users.Register;
 
 internal sealed class RegisterUserCommandHandler(
     IUnitOfWork unitOfWork,
     IUserRepository repository, 
-    IPasswordHasher passwordHasher) : ICommandHandler<RegisterUserCommand, Guid>
+    IPasswordHasher passwordHasher,
+    IEventBusService eventBus) : ICommandHandler<RegisterUserCommand, Guid>
 {
     public async Task<Result<Guid>> Handle(
         RegisterUserCommand command,
@@ -44,6 +46,12 @@ internal sealed class RegisterUserCommandHandler(
         repository.Add(user);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        await eventBus.PublishAsync(new UserRegisteredEventBus 
+        { 
+            Id = user.Id, 
+            Username = user.Username.Value,
+        }, cancellationToken);
 
         return user.Id;
     }
