@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Presentation.Authentication;
 using SharedKernal.Primitives;
 
 namespace Presentation.Users;
@@ -38,8 +39,8 @@ public class UsersModule : CarterModule
 
         app.MapPost(
             "/register", async (
-            RegisterUserRequest request, 
-            ICommandHandler<RegisterUserCommand, Guid> handler, 
+            RegisterUserRequest request,
+            ICommandHandler<RegisterUserCommand, Guid> handler,
             CancellationToken cancellationToken) =>
         {
             RegisterUserCommand command = request.Adapt<RegisterUserCommand>();
@@ -47,7 +48,7 @@ public class UsersModule : CarterModule
             Result<Guid> result = await handler.Handle(command, cancellationToken);
 
             return ResultsResponse.Handle(result);
-        });
+        }); //.AddEndpointFilter<ApiKeyAuthenticationEndpointFilter>();
 
         app.MapPost("/login", async (
             LoginUserRequest request,

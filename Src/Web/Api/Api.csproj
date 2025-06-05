@@ -1,5 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   
+  <PropertyGroup>
+    <UserSecretsId>5c60ce99-0dab-430d-b097-de1ceae7957a</UserSecretsId>
+  </PropertyGroup>
+  
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" />
