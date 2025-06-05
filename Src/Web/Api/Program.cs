@@ -16,8 +16,8 @@ builder.Services
     .AddApplication()
     .AddPersistence(builder.Configuration)
     .AddInfrastructure(builder.Configuration)
-    .AddPresentation(builder.Configuration)
-    .AddMessageBroker(builder.Configuration);
+    .AddPresentation(builder.Configuration);
+    //.AddMessageBroker(builder.Configuration);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

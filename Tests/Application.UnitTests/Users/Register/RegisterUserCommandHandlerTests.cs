@@ -13,7 +13,7 @@ public class RegisterUserCommandHandlerTests
     private readonly Mock<IUserRepository> _userRepositoryMock;
     private readonly Mock<IUnitOfWork> _unitOfWorkMock;
     private readonly Mock<IPasswordHasher> _passwordHasherMock;
-    private readonly Mock<IEventBusService> _eventBusServiceMock;
+    //private readonly Mock<IEventBusService> _eventBusServiceMock;
 
     private readonly RegisterUserCommandHandler _handler;
 
@@ -22,13 +22,13 @@ public class RegisterUserCommandHandlerTests
         _userRepositoryMock = new();
         _unitOfWorkMock = new();
         _passwordHasherMock = new();
-        _eventBusServiceMock = new();
+        //_eventBusServiceMock = new();
 
         _handler = new RegisterUserCommandHandler(
             _unitOfWorkMock.Object,
             _userRepositoryMock.Object,
-            _passwordHasherMock.Object,
-            _eventBusServiceMock.Object);
+            _passwordHasherMock.Object);
+            //,_eventBusServiceMock.Object);
     }
 
     [Fact]

@@ -10,8 +10,9 @@ namespace Application.Users.Register;
 internal sealed class RegisterUserCommandHandler(
     IUnitOfWork unitOfWork,
     IUserRepository repository, 
-    IPasswordHasher passwordHasher,
-    IEventBusService eventBus) : ICommandHandler<RegisterUserCommand, Guid>
+    IPasswordHasher passwordHasher
+    //,IEventBusService eventBus
+    ) : ICommandHandler<RegisterUserCommand, Guid>
 {
     public async Task<Result<Guid>> Handle(
         RegisterUserCommand command,
@@ -47,11 +48,11 @@ internal sealed class RegisterUserCommandHandler(
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        await eventBus.PublishAsync(new UserRegisteredEventBus 
-        { 
-            Id = user.Id, 
-            Username = user.Username.Value,
-        }, cancellationToken);
+        //await eventBus.PublishAsync(new UserRegisteredEventBus 
+        //{ 
+        //    Id = user.Id, 
+        //    Username = user.Username.Value,
+        //}, cancellationToken);
 
         return user.Id;
     }
