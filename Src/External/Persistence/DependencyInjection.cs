@@ -16,8 +16,7 @@ public static class DependencyInjection
         IConfiguration configuration)
     {
         return services
-            .AddDatabase(configuration)
-            .AddRedisCaching(configuration);
+            .AddDatabase(configuration);
     }
 
     private static IServiceCollection AddDatabase(
@@ -49,20 +48,6 @@ public static class DependencyInjection
             .AddScoped<IUserRepository, UserRepository>()
             .Decorate<IUserRepository, CachedUserRepository>()
             .AddScoped<IUnitOfWork, UnitOfWork>();
-
-        return services;
-    }
-
-    private static IServiceCollection AddRedisCaching(
-        this IServiceCollection services,
-        IConfiguration configuration)
-    {
-        services.AddMemoryCache();
-
-        services.AddStackExchangeRedisCache(options =>
-        {
-            options.Configuration = configuration.GetConnectionString("Redis");
-        });
 
         return services;
     }

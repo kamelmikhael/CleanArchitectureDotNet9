@@ -1,4 +1,5 @@
 ﻿using Application.Abstractions.Messaging;
+using Application.Users.GetById;
 using Application.Users.GetWithPagination;
 using Application.Users.Login;
 using Application.Users.Register;
@@ -62,6 +63,17 @@ public class UsersModule : CarterModule
             return ResultsResponse.Handle(result);
         });
 
+        app.MapGet("/{userId:guid}", async(
+            Guid userId,
+            IQueryHandler<GetUserByIdQuery, GetUserByIdResponse> handler,
+            CancellationToken cancellationToken) => 
+        {
+            GetUserByIdQuery query = new(userId);
+
+            Result<GetUserByIdResponse> result = await handler.Handle(query, cancellationToken);
+
+            return ResultsResponse.Handle(result);
+        });
     }
 
     public sealed record RegisterUserRequest(

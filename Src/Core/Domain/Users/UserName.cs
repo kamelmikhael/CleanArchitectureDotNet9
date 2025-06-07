@@ -7,6 +7,9 @@ public sealed class UserName : ValueObject
 {
     public string Value { get; private set; }
 
+    private UserName()
+    { }
+
     private UserName(string value)
     {
         Value = value;

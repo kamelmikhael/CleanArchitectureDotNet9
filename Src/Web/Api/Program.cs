@@ -9,6 +9,7 @@ using Presentation;
 using Presentation.MiddleWares;
 using SharedKernal.Primitives;
 using MessageBroker;
+using Caching;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +17,8 @@ builder.Services
     .AddApplication()
     .AddPersistence(builder.Configuration)
     .AddInfrastructure(builder.Configuration)
-    .AddPresentation(builder.Configuration);
+    .AddPresentation(builder.Configuration)
+    .AddCaching(builder.Configuration);
     //.AddMessageBroker(builder.Configuration);
 
 // Add services to the container.
