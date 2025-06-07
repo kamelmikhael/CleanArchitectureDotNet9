@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Newtonsoft.Json;
 using Persistence.Outbox;
 using SharedKernal.Abstraction;
@@ -86,5 +88,12 @@ internal sealed class UnitOfWork(ApplicationDbContext context)
 
                 return entry;
             }).ToList();
+    }
+
+    public IDbTransaction BeginTransaction()
+    {
+        IDbContextTransaction transaction = context.Database.BeginTransaction();
+
+        return transaction.GetDbTransaction();
     }
 }

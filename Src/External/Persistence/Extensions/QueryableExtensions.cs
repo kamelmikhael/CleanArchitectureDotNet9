@@ -11,7 +11,7 @@ public static class QueryableExtensions
     {
         if (condition)
         {
-            query = query.Where(predicate);
+            return query.Where(predicate);
         }
 
         return query;
