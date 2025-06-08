@@ -10,6 +10,7 @@ using Presentation.MiddleWares;
 using SharedKernal.Primitives;
 using MessageBroker;
 using Caching;
+using Serilog;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -19,11 +20,14 @@ builder.Services
     .AddInfrastructure(builder.Configuration)
     .AddPresentation(builder.Configuration)
     .AddCaching(builder.Configuration);
-    //.AddMessageBroker(builder.Configuration);
+//.AddMessageBroker(builder.Configuration);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 // builder.Services.AddOpenApi();
+
+builder.Host.UseSerilog((context, configuration) =>
+    configuration.ReadFrom.Configuration(context.Configuration));
 
 WebApplication app = builder.Build();
 
@@ -34,6 +38,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
     //app.MapOpenApi();
 }
+
+// used to log HTTP Api request coming to Our ASP API
+app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
 
