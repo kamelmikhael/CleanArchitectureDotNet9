@@ -53,5 +53,3 @@ app.UseMiddleware<GlobalExceptionHandlingMiddleWare>();
 app.MapCarter();
 
 app.Run();
-
-

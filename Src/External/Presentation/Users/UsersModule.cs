@@ -6,11 +6,10 @@ using Application.Users.Register;
 using Carter;
 using Mapster;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Presentation.Authentication;
 using SharedKernal.Primitives;
+using Presentation.Extensions;
+using Microsoft.AspNetCore.Http;
 
 namespace Presentation.Users;
 
@@ -63,17 +62,17 @@ public class UsersModule : CarterModule
             return ResultsResponse.Handle(result);
         });
 
-        app.MapGet("/{userId:guid}", async(
+        app.MapGet("/{userId:guid}", async (
             Guid userId,
             IQueryHandler<GetUserByIdQuery, GetUserByIdResponse> handler,
-            CancellationToken cancellationToken) => 
-        {
-            GetUserByIdQuery query = new(userId);
-
-            Result<GetUserByIdResponse> result = await handler.Handle(query, cancellationToken);
-
-            return ResultsResponse.Handle(result);
-        });
+            CancellationToken cancellationToken) 
+            => await Result
+                .Create(new GetUserByIdQuery(userId))
+                .Bind(query => handler.Handle(query, cancellationToken))
+                .Match(
+                    res => Results.Ok(res),
+                    res => Results.NotFound(res.Errors.FirstOrDefault()))
+                );
     }
 
     public sealed record RegisterUserRequest(
