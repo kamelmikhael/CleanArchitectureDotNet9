@@ -1,4 +1,5 @@
 ﻿using Application.Abstractions.Messaging;
+using Application.Orders.GetById;
 using Application.Orders.RemoveLineItem;
 using Carter;
 using Microsoft.AspNetCore.Builder;
@@ -26,6 +27,18 @@ public class OrdersModule : CarterModule
             CancellationToken cancellationToken)
             => await Result
                 .Create(new RemoveLineItemCommand(new(orderId), new(lineItemId)))
+                .Bind(query => handler.Handle(query, cancellationToken))
+                .Match(
+                    ResultsResponse.HandleSuccess,
+                    ResultsResponse.HandleFailure)
+                );
+
+        app.MapGet("/{orderId:guid}", async (
+            Guid orderId,
+            IQueryHandler<GetOrderByIdQuery, GetOrderByIdResponse> handler,
+            CancellationToken cancellationToken)
+            => await Result
+                .Create(new GetOrderByIdQuery(new(orderId)))
                 .Bind(query => handler.Handle(query, cancellationToken))
                 .Match(
                     ResultsResponse.HandleSuccess,

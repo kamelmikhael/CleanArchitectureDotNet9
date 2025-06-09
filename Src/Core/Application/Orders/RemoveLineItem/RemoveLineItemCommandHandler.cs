@@ -12,7 +12,7 @@ internal sealed class RemoveLineItemCommandHandler(
     public async Task<Result> Handle(RemoveLineItemCommand command, CancellationToken cancellationToken)
     {
         Order? order = await orderRepository
-            .GetByOrderIdWithLineItemAsync(
+            .GetByOrderIdWithLineItemByIdAsync(
                 command.OrderId,
                 command.LineItemId,
                 cancellationToken);
@@ -23,6 +23,8 @@ internal sealed class RemoveLineItemCommandHandler(
         }
 
         order.RemoveLineItem(command.LineItemId);
+
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success(order);
     }

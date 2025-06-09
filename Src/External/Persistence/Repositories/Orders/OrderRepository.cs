@@ -8,12 +8,19 @@ namespace Persistence.Repositories.Orders;
 internal sealed class OrderRepository(ApplicationDbContext context) 
     : Repository<Order, OrderId>(context), IOrderRepository
 {
-    public Task<Order?> GetByOrderIdWithLineItemAsync(
+    public Task<Order?> GetByOrderIdWithLineItemByIdAsync(
         OrderId orderId, 
         LineItemId lineItemId, 
         CancellationToken cancellationToken = default)
-    {
-        return ApplySpecification(new OrderByOrderIdWithLineItem(orderId, lineItemId))
+        => ApplySpecification(new OrderByOrderIdWithLineItem(orderId, lineItemId))
             .FirstOrDefaultAsync(cancellationToken);
-    }
+
+    public Task<Order?> GetByOrderIdWithLineItemsAsync(
+        OrderId orderId, 
+        CancellationToken cancellationToken = default)
+        => _dbSet
+            .Include(x => x.LineItems)
+            .AsNoTracking()
+            .AsSplitQuery()
+            .FirstOrDefaultAsync(x => x.Id == orderId, cancellationToken);
 }
