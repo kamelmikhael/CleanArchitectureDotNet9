@@ -11,4 +11,3 @@ internal sealed class UserByIdSpecification : Specification<User>
         IsSplitQuery = true;
     }
 }
-

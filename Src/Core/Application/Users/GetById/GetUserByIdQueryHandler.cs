@@ -10,7 +10,7 @@ public sealed class GetUserByIdQueryHandler(
 {
     public async Task<Result<GetUserByIdResponse>> Handle(GetUserByIdQuery query, CancellationToken cancellationToken)
     {
-        User? user = await userRepository.GetByIdAsync(query.Id, cancellationToken);
+        User? user = await userRepository.FindAsync(query.Id, cancellationToken);
 
         if (user is null)
         {

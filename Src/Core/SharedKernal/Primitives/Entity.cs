@@ -2,18 +2,27 @@
 
 namespace SharedKernal.Primitives;
 
-public abstract class Entity : IEquatable<Entity>
+public abstract class Entity : Entity<Guid>
 {
+    protected Entity() : base()
+    { }
+
+    protected Entity(Guid id) : base(id)
+    { }
+}
+
+public abstract class Entity<TPrimaryKey> : IEquatable<Entity<TPrimaryKey>>
+{
+    public virtual TPrimaryKey Id { get; private init; }
+
     private readonly List<IDomainEvent> _domainEvents = [];
 
     public List<IDomainEvent> DomainEvents => [.. _domainEvents];
 
-    public Guid Id { get; private init; }
-
-    protected Entity() 
+    protected Entity()
     { }
 
-    protected Entity(Guid id)
+    protected Entity(TPrimaryKey id)
     {
         Id = id;
     }
@@ -28,51 +37,29 @@ public abstract class Entity : IEquatable<Entity>
         _domainEvents.Add(domainEvent);
     }
 
-    public bool Equals(Entity? other)
+    public bool Equals(Entity<TPrimaryKey>? other)
     {
-        if (other is null)
+        if (other is null || other.GetType() != GetType())
         {
             return false;
         }
 
-        if (other.GetType() != GetType())
-        {
-             return false;
-        }
-
-        return other.Id == Id;
+        return EqualityComparer<TPrimaryKey>.Default.Equals(Id, other.Id);
     }
 
     public override bool Equals(object? obj)
     {
-        if (obj is null)
-        {
-            return false;
-        }
-
-        if(obj.GetType() != GetType())
-        {
-            return false;
-        }
-
-        if (obj is not Entity entity)
-        {
-            return false;
-        }
-
-        return entity.Id == Id;
+        return Equals(obj as Entity<TPrimaryKey>);
     }
 
     public override int GetHashCode()
     {
-        return Id.GetHashCode() * 41;
+        return Id!.GetHashCode() * 41;
     }
 
-    public static bool operator ==(Entity? left, Entity? right)
-        => left is not null
-            && right is not null
-            && left.Equals(right);
+    public static bool operator ==(Entity<TPrimaryKey> first, Entity<TPrimaryKey> second) 
+        => first.Equals(second);
 
-    public static bool operator !=(Entity? left, Entity? right)
-        => !(left == right);
+    public static bool operator !=(Entity<TPrimaryKey> first, Entity<TPrimaryKey> second) 
+        => !first.Equals(second);
 }

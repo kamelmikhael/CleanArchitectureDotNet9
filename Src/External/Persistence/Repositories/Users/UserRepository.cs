@@ -1,12 +1,11 @@
-﻿using Application.Users;
-using Domain.Users;
+﻿using Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Extensions;
 using Persistence.Specifications.Users;
 
 namespace Persistence.Repositories;
 
-public sealed class UserRepository(ApplicationDbContext context) 
+internal sealed class UserRepository(ApplicationDbContext context) 
     : Repository<User>(context), IUserRepository
 {
     public Task<bool> IsEmailExistsAsync(Email email, CancellationToken cancellationToken = default)

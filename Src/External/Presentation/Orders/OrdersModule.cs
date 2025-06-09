@@ -1,0 +1,35 @@
+﻿using Application.Abstractions.Messaging;
+using Application.Orders.RemoveLineItem;
+using Carter;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Routing;
+using Presentation.Extensions;
+using SharedKernal.Primitives;
+
+namespace Presentation.Orders;
+
+public class OrdersModule : CarterModule
+{
+    public OrdersModule()
+        : base("/orders")
+    {
+        WithTags("Orders");
+        // RequireAuthorization();
+    }
+
+    public override void AddRoutes(IEndpointRouteBuilder app)
+    {
+        app.MapDelete("/{orderId:guid}/{lineItemId:guid}", async (
+            Guid orderId,
+            Guid lineItemId,
+            ICommandHandler<RemoveLineItemCommand> handler,
+            CancellationToken cancellationToken)
+            => await Result
+                .Create(new RemoveLineItemCommand(new(orderId), new(lineItemId)))
+                .Bind(query => handler.Handle(query, cancellationToken))
+                .Match(
+                    ResultsResponse.HandleSuccess,
+                    ResultsResponse.HandleFailure)
+                );
+    }
+}

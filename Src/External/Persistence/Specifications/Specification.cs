@@ -3,8 +3,17 @@ using System.Linq.Expressions;
 
 namespace Persistence.Specifications;
 
-public abstract class Specification<TEntity>
+public abstract class Specification<TEntity> : Specification<TEntity, Guid>
     where TEntity : Entity
+{
+    protected Specification(Expression<Func<TEntity, bool>>? criteria)
+        : base(criteria)
+    { }
+
+}
+
+public abstract class Specification<TEntity, TKey>
+    where TEntity : Entity<TKey>
 {
     protected Specification(Expression<Func<TEntity, bool>>? criteria)
         => Criteria = criteria;
@@ -19,7 +28,7 @@ public abstract class Specification<TEntity>
 
     public Expression<Func<TEntity, object>>? OrderByDescendingExpressions { get; private set; }
 
-    protected void Include(Expression<Func<TEntity, object>> expression) 
+    protected void Include(Expression<Func<TEntity, object>> expression)
         => IncludeExpressions.Add(expression);
 
     protected void OrderBy(Expression<Func<TEntity, object>> expression)

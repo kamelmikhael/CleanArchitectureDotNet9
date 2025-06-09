@@ -8,10 +8,10 @@ public sealed class CachedUserRepository(
     IUserRepository decorated,
     ICacheService cacheService) : Repository<User>(context), IUserRepository
 {
-    public override Task<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    public override Task<User?> FindAsync(Guid id, CancellationToken cancellationToken = default)
     => cacheService.GetOrCreateAsync(
             $"User-{id}",
-            async () => await decorated.GetByIdAsync(id, cancellationToken),
+            async () => await decorated.FindAsync(id, cancellationToken),
             cancellationToken);
 
     public Task<User?> GetByUsernameAsync(UserName username, CancellationToken cancellationToken = default)

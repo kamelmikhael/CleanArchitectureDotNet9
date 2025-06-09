@@ -11,6 +11,18 @@ public static class ResultExtensions
             : Result.Failure<TOut>(result.Errors);
     }
 
+    public static async Task<Result> Bind(
+        this Result result,
+        Func<Task<Result>> func)
+    {
+        if (result.IsFailure)
+        {
+            return Result.Failure(result.Errors);
+        }
+
+        return await func();
+    }
+
     public static async Task<Result> Bind<TIn>(
         this Result<TIn> result,
         Func<TIn, Task<Result>> func)

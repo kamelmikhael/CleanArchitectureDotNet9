@@ -13,11 +13,14 @@ internal sealed class LoginUserCommandHandler(
         LoginUserCommand command,
         CancellationToken cancellationToken)
     {
-        var userNameResult = UserName.Create(command.Username);
+        Result<UserName> userNameResult = UserName.Create(command.Username);
 
-        var user = await repository.GetByUsernameAsync(userNameResult.Value);
+        User? user = await repository.GetByUsernameAsync(userNameResult.Value, cancellationToken);
 
-        if (user is null) return Result.Failure<string>(UserErrors.InvalidCredentials);
+        if (user is null)
+        {
+            return Result.Failure<string>(UserErrors.InvalidCredentials);
+        }
 
         return await tokenProvider.GenerateAsync(user);
     }

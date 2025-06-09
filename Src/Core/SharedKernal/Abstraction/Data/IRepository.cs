@@ -3,17 +3,46 @@ using System.Linq.Expressions;
 
 namespace SharedKernal.Abstractions.Data;
 
-public interface IRepository<TEntity> where TEntity : Entity
-{
-    Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
+public interface IRepository<TEntity> : IRepository<TEntity, Guid>
+    where TEntity : Entity
+{ }
 
-    Task<IEnumerable<TEntity>> GetListAsync(CancellationToken cancellationToken = default);
+public interface IRepository<TEntity, TKey> 
+    where TEntity : Entity<TKey>
+{
+    Task<TEntity?> FindAsync(TKey id, CancellationToken cancellationToken = default);
+
+    Task<TEntity?> FindAsync(object?[]? keyValues, CancellationToken cancellationToken = default);
+
+    Task<TEntity?> FirstOrDefaultAsync(CancellationToken cancellationToken = default);
+
+    Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
+
+    Task<IEnumerable<TEntity>> ToListAsync(CancellationToken cancellationToken = default);
+
+    Task<IEnumerable<TEntity>> ToListAsync(Expression<Func<TEntity, bool>> predicate,
+        CancellationToken cancellationToken = default);
+
+    Task<(IEnumerable<TEntity>, int)> ToPagedListAsync(Expression<Func<TEntity, bool>> predicate,
+        int pageIndex = 0,
+        int pageSize = 10,
+        CancellationToken cancellationToken = default);
+
+    Task<int> CountAsync(CancellationToken cancellationToken = default);
+
+    Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
 
     void Add(TEntity entity);
 
+    void AddRange(IEnumerable<TEntity> entities);
+
     void Update(TEntity entity);
 
+    void UpdateRange(IEnumerable<TEntity> entities);
+
     void Delete(TEntity entity);
+
+    void DeleteRange(IEnumerable<TEntity> entities);
 
     Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
 }

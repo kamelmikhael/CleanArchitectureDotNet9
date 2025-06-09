@@ -1,16 +1,16 @@
 ﻿using Domain.Customers;
 using Domain.Products;
-using Domain.Users;
 using SharedKernal.Primitives;
 
 namespace Domain.Orders;
 
-public class Order
+public class Order : Entity<OrderId>
 {
-    private Order()
+    private Order() : base()
     { }
 
-    public OrderId Id { get; private set; }
+    private Order(OrderId id) : base(id)
+    { }
 
     public CustomerId CustomerId { get; private set; }
 
@@ -27,9 +27,13 @@ public class Order
                 quantity)
             );
 
-    public static Order Create(CustomerId customerId) => new() 
+    public static Order Create(CustomerId customerId) => new(new(Guid.NewGuid())) 
         {
-            Id = new(Guid.NewGuid()),
             CustomerId = customerId, 
         };
+
+    public void RemoveLineItem(LineItemId lineItemId)
+    {
+        _lineItems.RemoveWhere(li => li.Id == lineItemId);
+    }
 }
