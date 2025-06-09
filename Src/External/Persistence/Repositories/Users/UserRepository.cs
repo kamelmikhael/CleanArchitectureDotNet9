@@ -37,7 +37,10 @@ public sealed class UserRepository(ApplicationDbContext context)
             .AsQueryable();
 
         return (
-            await query.Skip(page * pageSize).Take(pageSize).ToListAsync(cancellationToken),
+            await query.OrderBy(x => x.Id)
+                       .Skip(page * pageSize)
+                       .Take(pageSize)
+                       .ToListAsync(cancellationToken),
             await query.CountAsync(cancellationToken)
         );
     }

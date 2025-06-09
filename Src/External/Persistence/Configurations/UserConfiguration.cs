@@ -28,9 +28,5 @@ public partial class UserConfiguration : IEntityTypeConfiguration<User>
         entity.HasMany(x => x.Roles)
             .WithMany(x => x.Users)
             .UsingEntity<UserRole>();
-
-        OnConfigurePartial(entity);
     }
-
-    partial void OnConfigurePartial(EntityTypeBuilder<User> entity);
 }

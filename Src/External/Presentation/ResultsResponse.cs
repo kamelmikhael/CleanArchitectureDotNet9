@@ -18,7 +18,7 @@ internal static class ResultsResponse
         return HandleFailure(result);
     }
 
-    public static IResult Handle<T>(Result<T> result)
+    public static IResult Handle(Result result)
     {
         if ( result is { IsSuccess: true })
         {
@@ -30,30 +30,49 @@ internal static class ResultsResponse
         return HandleFailure(result);
     }
 
+    public static IResult HandleSuccess(Result result)
+    {
+        if (result is { IsFailure: true })
+        {
+            throw new InvalidOperationException();
+        }
+
+        result.ClearErrors();
+
+        return Results.Ok(result);
+    }
+
     public static IResult HandleFailure(Result result)
     {
-        return result switch
+        if (result is { IsSuccess: true })
         {
-            { IsSuccess: true } => throw new InvalidOperationException(),
-            { IsFailure: true } => result.Errors.Any(x => x.Type == ErrorType.Validation)
-                ? Results.BadRequest(
-                    CreateProblemDetails(
-                        "Validation Error",
-                        StatusCodes.Status400BadRequest,
-                        result.Errors))
-                : Results.BadRequest(
+            throw new InvalidOperationException();
+        }
+        else if (result is { IsFailure: true })
+        {
+            if (result.Errors.Any(x => x.Type == ErrorType.Validation))
+            {
+                return Results.BadRequest(
+                        CreateProblemDetails(
+                            "Validation Errors",
+                            StatusCodes.Status400BadRequest,
+                            [.. result.Errors.Where(x => x.Type == ErrorType.Validation)]));
+            }
+            else if (result.Errors.Any(x => x.Type == ErrorType.NotFound))
+            {
+                return Results.NotFound(
+                        CreateProblemDetails(
+                            "Not Found Errors",
+                            StatusCodes.Status404NotFound,
+                            [.. result.Errors.Where(x => x.Type == ErrorType.NotFound)]));
+            }
+        }
+
+        return Results.BadRequest(
                         CreateProblemDetails(
                             "Bad Request",
                             StatusCodes.Status400BadRequest,
-                            result.Errors)),
-            _ =>
-                Results.BadRequest(
-                    CreateProblemDetails(
-                        "Bad Request",
-                        StatusCodes.Status400BadRequest,
-                        result.Errors))
-
-        };
+                            [.. result.Errors.Where(x => x != Error.None)]));
     }
 
     private static ProblemDetails CreateProblemDetails(
@@ -63,8 +82,8 @@ internal static class ResultsResponse
         => new()
         {
             Title = title,
-            //Type = error.Code,
-            //Detail = error.Message,
+            // Type = errors?.FirstOrDefault()?.Code,
+            // Detail = errors?.FirstOrDefault()?.Description,
             Status = status,
             Extensions = { { nameof(errors), errors } }
         };

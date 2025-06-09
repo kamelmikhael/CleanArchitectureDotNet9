@@ -70,8 +70,8 @@ public class UsersModule : CarterModule
                 .Create(new GetUserByIdQuery(userId))
                 .Bind(query => handler.Handle(query, cancellationToken))
                 .Match(
-                    res => Results.Ok(res),
-                    res => Results.NotFound(res.Errors.FirstOrDefault()))
+                    ResultsResponse.HandleSuccess,
+                    ResultsResponse.HandleFailure)
                 );
     }
 
