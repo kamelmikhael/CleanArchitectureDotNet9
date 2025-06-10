@@ -1,0 +1,32 @@
+﻿using Application.Abstractions.Messaging;
+using Domain.Customers;
+using Domain.Orders;
+using SharedKernal.Abstractions.Data;
+using SharedKernal.Primitives;
+
+namespace Application.Orders.Create;
+
+public sealed class CreateOrderCommandHandler(
+    ICustomerRepository customerRepository,
+    IOrderRepository orderRepository,
+    IUnitOfWork unitOfWork) : ICommandHandler<CreateOrderCommand>
+{
+    public async Task<Result> Handle(CreateOrderCommand command, CancellationToken cancellationToken)
+    {
+        Customer? customer = await customerRepository
+            .FindAsync(command.CustomerId, cancellationToken);
+
+        if (customer is null)
+        {
+            return Result.Failure(CustomerErrors.NotFound(command.CustomerId));
+        }
+
+        var order = Order.Create(command.CustomerId);
+
+        orderRepository.Add(order);
+
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        return Result.Success();
+    }
+}

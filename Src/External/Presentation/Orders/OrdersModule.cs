@@ -1,4 +1,5 @@
 ﻿using Application.Abstractions.Messaging;
+using Application.Orders.Create;
 using Application.Orders.GetById;
 using Application.Orders.RemoveLineItem;
 using Carter;
@@ -39,6 +40,18 @@ public class OrdersModule : CarterModule
             CancellationToken cancellationToken)
             => await Result
                 .Create(new GetOrderByIdQuery(new(orderId)))
+                .Bind(query => handler.Handle(query, cancellationToken))
+                .Match(
+                    ResultsResponse.HandleSuccess,
+                    ResultsResponse.HandleFailure)
+                );
+
+        app.MapPost("/", async (
+            CreateOrderRequest request,
+            ICommandHandler<CreateOrderCommand> handler,
+            CancellationToken cancellationToken)
+            => await Result
+                .Create(new CreateOrderCommand(new(request.CustomerId)))
                 .Bind(query => handler.Handle(query, cancellationToken))
                 .Match(
                     ResultsResponse.HandleSuccess,

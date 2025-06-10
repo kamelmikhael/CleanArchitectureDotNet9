@@ -1,10 +1,12 @@
-﻿using Domain.Orders;
+﻿using Domain.Customers;
+using Domain.Orders;
 using Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Persistence.Interceptors;
 using Persistence.Repositories;
+using Persistence.Repositories.Customers;
 using Persistence.Repositories.Orders;
 using Scrutor;
 using SharedKernal.Abstractions.Data;
@@ -47,8 +49,10 @@ public static class DependencyInjection
 
         services
             .AddScoped(typeof(IRepository<>), typeof(Repository<>))
+            .AddScoped(typeof(IRepository<,>), typeof(Repository<,>))
             .AddScoped<IUserRepository, UserRepository>()
             .AddScoped<IOrderRepository, OrderRepository>()
+            .AddScoped<ICustomerRepository, CustomerRepository>()
             .Decorate<IUserRepository, CachedUserRepository>()
             .AddScoped<IUnitOfWork, UnitOfWork>();
 

@@ -1,5 +1,4 @@
 ﻿using Domain.Orders;
-using Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Specifications.Orders;
 

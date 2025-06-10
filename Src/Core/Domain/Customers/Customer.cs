@@ -1,20 +1,22 @@
-﻿namespace Domain.Customers;
+﻿using SharedKernal.Primitives;
 
-public class Customer
+namespace Domain.Customers;
+
+public class Customer : Entity<CustomerId>
 {
     private Customer()
     { }
 
-    public CustomerId Id { get; private set; }
+    private Customer(CustomerId id) : base(id) 
+    { }
 
     public string Email { get; private set; } = string.Empty;
 
     public string Name { get; private set; } = string.Empty;
 
     public static Customer Create(string email, string name)
-        => new() 
-        { 
-            Id = new CustomerId(Guid.NewGuid()),
+        => new(new(Guid.NewGuid())) 
+        {
             Email = email,
             Name = name
         };
