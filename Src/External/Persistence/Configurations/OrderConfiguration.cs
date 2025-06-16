@@ -2,6 +2,7 @@
 using Domain.Orders;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Persistence.Constants;
 
 namespace Persistence.Configurations;
 
@@ -9,6 +10,8 @@ internal partial class OrderConfiguration : IEntityTypeConfiguration<Order>
 {
     public void Configure(EntityTypeBuilder<Order> builder)
     {
+        builder.ToTable(TableNames.Orders, SchemaNames.eShop);
+
         builder.HasKey(o => o.Id);
 
         builder.Property(o => o.Id).HasConversion(
