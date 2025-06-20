@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.JsonWebTokens;
-using Polly;
+using System.Collections.Generic;
 
 namespace Infrastructure.Authentication.Permissions;
 
@@ -13,14 +13,17 @@ public class PermissionAuthorizationHandler(IServiceScopeFactory serviceScopeFac
         AuthorizationHandlerContext context, 
         PermissionRequirement requirement)
     {
-        HashSet<string> permissions = context
+        var permissions = context
             .User
             .Claims
             .Where(x => x.Type == CustomClaims.Permissions)
             .Select(x => x.Value)
             .ToHashSet();
 
-        if (permissions.Contains(requirement.Permission)) context.Succeed(requirement);
+        if (permissions.Contains(requirement.Permission))
+        {
+            context.Succeed(requirement);
+        }
 
         return Task.CompletedTask;
     }

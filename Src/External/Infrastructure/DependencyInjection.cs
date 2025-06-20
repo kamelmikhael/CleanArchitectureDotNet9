@@ -2,20 +2,17 @@
 using Infrastructure.Authentication;
 using Infrastructure.Authentication.Jwt;
 using Infrastructure.Authentication.Permissions;
-using Infrastructure.BackgroundJobs;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Quartz;
 using SharedKernal.Abstractions;
 using Caching;
-using MessageBroker;
 using Persistence;
 using Application;
-using SagaRebus;
+using BackgroundJobs;
 
 namespace Infrastructure;
 
@@ -32,6 +29,7 @@ public static class DependencyInjection
             .AddAuthorizationInternal()
             .AddServices()
             .AddCaching(configuration);
+            //.AddBackgroundJobs();
             //.AddSagaRebus(configuration);
             //.AddMessageBroker(configuration)
             //.AddBackgroundJobs();
@@ -67,28 +65,6 @@ public static class DependencyInjection
         services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
         services.AddSingleton<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();
         services.AddScoped<IPermissionService, PermissionService>();
-        return services;
-    }
-
-    private static IServiceCollection AddBackgroundJobs(this IServiceCollection services)
-    {
-        services.AddQuartz(configure =>
-        {
-            var jobKey = new JobKey(nameof(ProcessOutboxMessagesJob));
-
-            configure.AddJob<ProcessOutboxMessagesJob>(jobKey)
-                     .AddTrigger(trigger =>
-                        trigger
-                            .ForJob(jobKey)
-                            .WithSimpleSchedule(schedule =>
-                                schedule.WithIntervalInSeconds(10)
-                                        .RepeatForever()));
-
-            configure.UseMicrosoftDependencyInjectionJobFactory();
-        });
-
-        services.AddQuartzHostedService();
-
         return services;
     }
 

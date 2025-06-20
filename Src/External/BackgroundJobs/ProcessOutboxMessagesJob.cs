@@ -7,7 +7,7 @@ using Quartz;
 using SharedKernal.Abstraction;
 using SharedKernal.Abstractions;
 
-namespace Infrastructure.BackgroundJobs;
+namespace BackgroundJobs;
 
 [DisallowConcurrentExecution]
 internal sealed class ProcessOutboxMessagesJob : IJob
@@ -25,26 +25,29 @@ internal sealed class ProcessOutboxMessagesJob : IJob
 
     public async Task Execute(IJobExecutionContext context)
     {
-        var messages = await _dbContext.Set<OutboxMessage>()
+        List<OutboxMessage> messages = await _dbContext.Set<OutboxMessage>()
             .Where(m => m.ProcessedOnUtc == null)
             .Take(20)
             .ToListAsync(context.CancellationToken);
 
-        foreach (var message in messages)
+        foreach (OutboxMessage message in messages)
         {
             IDomainEvent? domainEvent = JsonConvert.DeserializeObject<IDomainEvent>(message.Content);
 
-            if (domainEvent is null) continue;
+            if (domainEvent is null)
+            {
+                continue;
+            }
 
-            var policy = Policy
+            Polly.Retry.AsyncRetryPolicy policy = Policy
                 .Handle<Exception>()
                 .WaitAndRetryAsync(
-                    3, 
+                    3,
                     attempt => TimeSpan.FromMilliseconds(50 * attempt));
 
-            var result = await policy.ExecuteAndCaptureAsync(() => 
+            PolicyResult result = await policy.ExecuteAndCaptureAsync(() =>
                 _eventPublisher.PublishAsync(
-                    domainEvent, 
+                    domainEvent,
                     context.CancellationToken));
 
             // Log the error and set the error message
