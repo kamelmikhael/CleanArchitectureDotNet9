@@ -11,6 +11,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Quartz;
 using SharedKernal.Abstractions;
+using Caching;
+using MessageBroker;
+using Persistence;
+using Application;
+using SagaRebus;
 
 namespace Infrastructure;
 
@@ -21,9 +26,14 @@ public static class DependencyInjection
         IConfiguration configuration)
     {
         return services
+            .AddApplication()
+            .AddPersistence(configuration)
             .AddAuthenticationInternal()
             .AddAuthorizationInternal()
-            .AddServices();
+            .AddServices()
+            .AddCaching(configuration);
+            //.AddSagaRebus(configuration);
+            //.AddMessageBroker(configuration)
             //.AddBackgroundJobs();
     }
 

@@ -42,6 +42,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageBroker", "Src\Extern
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caching", "Src\External\Caching\Caching.csproj", "{E5B2F601-4F13-4AE7-AEDE-806311BA5175}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SagaRebus", "Src\External\SagaRebus\SagaRebus.csproj", "{A8FC5976-6944-4075-8C59-66CC24DAEC56}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -92,6 +94,10 @@ Global
 		{E5B2F601-4F13-4AE7-AEDE-806311BA5175}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E5B2F601-4F13-4AE7-AEDE-806311BA5175}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E5B2F601-4F13-4AE7-AEDE-806311BA5175}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8FC5976-6944-4075-8C59-66CC24DAEC56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8FC5976-6944-4075-8C59-66CC24DAEC56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8FC5976-6944-4075-8C59-66CC24DAEC56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8FC5976-6944-4075-8C59-66CC24DAEC56}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -111,6 +117,7 @@ Global
 		{1AFA3EC2-47BF-47CB-92B4-0F203CF430E5} = {F1A66655-BB20-4AF4-B6A1-F29CEA282750}
 		{01788F78-6F31-4CC4-8A7C-872EA96D9533} = {F1A66655-BB20-4AF4-B6A1-F29CEA282750}
 		{E5B2F601-4F13-4AE7-AEDE-806311BA5175} = {F1A66655-BB20-4AF4-B6A1-F29CEA282750}
+		{A8FC5976-6944-4075-8C59-66CC24DAEC56} = {F1A66655-BB20-4AF4-B6A1-F29CEA282750}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9E140349-28EC-43CB-8403-F007DE6114B0}

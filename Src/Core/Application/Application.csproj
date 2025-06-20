@@ -5,6 +5,7 @@
     <PackageReference Include="Mapster" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+    <PackageReference Include="Rebus" />
     <PackageReference Include="Serilog" />
     <PackageReference Include="Scrutor" />
   </ItemGroup>
