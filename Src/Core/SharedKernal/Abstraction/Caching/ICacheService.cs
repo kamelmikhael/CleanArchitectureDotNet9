@@ -4,6 +4,7 @@ public interface ICacheService
 {
     Task<T?> GetAsync<T>(string cacheKey, CancellationToken cancellationToken = default)
         where T : class;
+
     Task<T?> GetOrCreateAsync<T>(string cacheKey, Func<Task<T?>> factory, CancellationToken cancellationToken = default)
         where T : class;
 

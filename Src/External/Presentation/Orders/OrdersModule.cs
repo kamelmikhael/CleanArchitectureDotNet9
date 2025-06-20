@@ -4,12 +4,15 @@ using Application.Orders.GetById;
 using Application.Orders.RemoveLineItem;
 using Carter;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.Routing;
 using Presentation.Extensions;
 using SharedKernal.Primitives;
 
 namespace Presentation.Orders;
 
+//[EnableRateLimiting("fixed")]
+//[DisableRateLimiting]
 public class OrdersModule : CarterModule
 {
     public OrdersModule()
@@ -57,5 +60,6 @@ public class OrdersModule : CarterModule
                     ResultsResponse.HandleSuccess,
                     ResultsResponse.HandleFailure)
                 );
+            //.RequireRateLimiting("fixed");
     }
 }
