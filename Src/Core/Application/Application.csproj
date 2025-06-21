@@ -20,10 +20,4 @@
     </AssemblyAttribute>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Products\Delete\" />
-    <Folder Include="Products\GetList\" />
-    <Folder Include="Products\Update\" />
-  </ItemGroup>
-
 </Project>

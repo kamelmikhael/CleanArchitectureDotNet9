@@ -23,4 +23,9 @@ public class Product : Entity<ProductId>
             Price = price,
             Sku = sku,
         };
+
+    public void SetName(string name)
+    {
+        Name = name;
+    }
 }

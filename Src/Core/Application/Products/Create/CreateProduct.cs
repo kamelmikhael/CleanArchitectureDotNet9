@@ -1,7 +1,6 @@
 ﻿using Application.Abstractions.Messaging;
 using Domain.Products;
 using FluentValidation;
-using SharedKernal.Abstraction;
 using SharedKernal.Abstractions;
 using SharedKernal.Abstractions.Data;
 using SharedKernal.Primitives;
@@ -10,12 +9,6 @@ namespace Application.Products.Create;
 
 public sealed class CreateProduct
 {
-    public sealed record Request(
-        string Name,
-        string Currency,
-        decimal Amount,
-        string Sku);
-
     public sealed record Command(
         string Name,
         string Currency,
@@ -52,28 +45,6 @@ public sealed class CreateProduct
             await publisher.PublishAsync(new ProductCreatedEvent(product.Id.Value), cancellationToken);
 
             return Result.Success(product.Id.Value);
-        }
-    }
-
-    public sealed record ProductCreatedEvent(Guid ProductId) : IDomainEvent;
-
-    public sealed class ProductCreatedEventHandler1 : IDomainEventHandler<ProductCreatedEvent>
-    {
-        public Task HandleAsync(ProductCreatedEvent domainEvent, CancellationToken cancellationToken)
-        {
-            Console.WriteLine($"Product Created Event Handler #1 for Id = {domainEvent.ProductId}");
-
-            return Task.CompletedTask;
-        }
-    }
-
-    public sealed class ProductCreatedEventHandler2 : IDomainEventHandler<ProductCreatedEvent>
-    {
-        public Task HandleAsync(ProductCreatedEvent domainEvent, CancellationToken cancellationToken)
-        {
-            Console.WriteLine($"Product Created Event Handler #2 for Id = {domainEvent.ProductId}");
-
-            return Task.CompletedTask;
         }
     }
 }
