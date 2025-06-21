@@ -34,7 +34,7 @@ public class ProductsModule : CarterModule
                     ResultsResponse.HandleFailure));
 
         app.MapGet("/", async (
-            IQueryHandler<GetProductList.Query, List<GetProductList.Response>?> handler
+            IQueryHandler<GetProductList.Query, List<GetProductListResponse>?> handler
             , CancellationToken cancellationToken) => await Result
                 .Create(new GetProductList.Query())
                 .Bind(query => handler.Handle(query, cancellationToken))
