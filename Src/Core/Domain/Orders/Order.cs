@@ -27,13 +27,29 @@ public class Order : Entity<OrderId>
                 quantity)
             );
 
-    public static Order Create(CustomerId customerId) => new(new(Guid.NewGuid())) 
+    public static Order Create(CustomerId customerId)
+    {
+        var order = new Order(new(Guid.NewGuid()))
         {
-            CustomerId = customerId, 
+            CustomerId = customerId,
         };
+
+        order.Raise(new OrderCreatedDomainEvent(order.Id));
+
+        return order;
+    }
 
     public void RemoveLineItem(LineItemId lineItemId)
     {
-        _lineItems.RemoveWhere(li => li.Id == lineItemId);
+        LineItem? lineItem = _lineItems.FirstOrDefault(li => li.Id == lineItemId);
+
+        if (lineItem is null)
+        {
+            return;
+        }
+
+        _lineItems.Remove(lineItem);
+
+        Raise(new LineItemRemovedDomainEvent(Id, lineItemId));
     }
 }

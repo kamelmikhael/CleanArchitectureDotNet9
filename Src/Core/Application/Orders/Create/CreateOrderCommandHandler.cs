@@ -11,7 +11,6 @@ namespace Application.Orders.Create;
 public sealed class CreateOrderCommandHandler(
     ICustomerRepository customerRepository
     , IOrderRepository orderRepository
-    //, IBus bus
     , IUnitOfWork unitOfWork) : ICommandHandler<CreateOrderCommand>
 {
     public async Task<Result> Handle(CreateOrderCommand command, CancellationToken cancellationToken)
@@ -29,8 +28,6 @@ public sealed class CreateOrderCommandHandler(
         orderRepository.Add(order);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
-
-        //await bus.Send(new OrderCreatedEvent(order.Id.Value));
 
         return Result.Success();
     }

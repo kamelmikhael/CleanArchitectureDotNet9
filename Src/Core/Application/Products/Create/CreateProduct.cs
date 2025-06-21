@@ -42,7 +42,7 @@ public sealed class CreateProduct
 
             await unitOfWork.SaveChangesAsync(cancellationToken);
 
-            await publisher.PublishAsync(new ProductCreatedEvent(product.Id.Value), cancellationToken);
+            await publisher.PublishAsync(new ProductCreatedDomainEvent(product.Id.Value), cancellationToken);
 
             return Result.Success(product.Id.Value);
         }

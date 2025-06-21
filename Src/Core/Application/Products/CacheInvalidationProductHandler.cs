@@ -1,6 +1,4 @@
-﻿using Application.Products.Create;
-using Application.Products.Delete;
-using Application.Products.Update;
+﻿using Domain.Products;
 using SharedKernal.Abstraction;
 using SharedKernal.Abstraction.Caching;
 
@@ -8,21 +6,21 @@ namespace Application.Products;
 
 internal sealed class CacheInvalidationProductHandler(
     ICacheService cacheService)
-    : IDomainEventHandler<ProductCreatedEvent>
-    , IDomainEventHandler<ProductUpdatedEvent>
-    , IDomainEventHandler<ProductDeletedEvent>
+    : IDomainEventHandler<ProductCreatedDomainEvent>
+    , IDomainEventHandler<ProductUpdatedDomainEvent>
+    , IDomainEventHandler<ProductDeletedDomainEvent>
 {
-    public async Task HandleAsync(ProductCreatedEvent domainEvent, CancellationToken cancellationToken)
+    public async Task HandleAsync(ProductCreatedDomainEvent domainEvent, CancellationToken cancellationToken)
     {
         await HandleInternalAsync(cancellationToken);
     }
 
-    public async Task HandleAsync(ProductUpdatedEvent domainEvent, CancellationToken cancellationToken)
+    public async Task HandleAsync(ProductUpdatedDomainEvent domainEvent, CancellationToken cancellationToken)
     {
         await HandleInternalAsync(cancellationToken);
     }
 
-    public async Task HandleAsync(ProductDeletedEvent domainEvent, CancellationToken cancellationToken)
+    public async Task HandleAsync(ProductDeletedDomainEvent domainEvent, CancellationToken cancellationToken)
     {
         await HandleInternalAsync(cancellationToken);
     }

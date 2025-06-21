@@ -30,7 +30,7 @@ public sealed class DeleteProduct
 
             await unitOfWork.SaveChangesAsync(cancellationToken);
 
-            await publisher.PublishAsync(new ProductDeletedEvent(command.Id), cancellationToken);
+            await publisher.PublishAsync(new ProductDeletedDomainEvent(command.Id), cancellationToken);
 
             return Result.Success();
         }

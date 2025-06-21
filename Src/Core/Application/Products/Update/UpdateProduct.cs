@@ -32,7 +32,7 @@ public sealed class UpdateProduct
 
             await unitOfWork.SaveChangesAsync(cancellationToken);
 
-            await publisher.PublishAsync(new ProductUpdatedEvent(command.Id), cancellationToken);
+            await publisher.PublishAsync(new ProductUpdatedDomainEvent(command.Id), cancellationToken);
 
             return Result.Success();
         }
