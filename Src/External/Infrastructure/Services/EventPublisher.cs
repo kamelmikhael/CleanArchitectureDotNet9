@@ -1,14 +1,36 @@
-﻿using SharedKernal.Abstraction;
+﻿using System;
+using MassTransit;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using SharedKernal.Abstraction;
 using SharedKernal.Abstractions;
 
 namespace Infrastructure.Services;
 
-internal sealed class EventPublisher : IEventPublisher
+internal sealed class EventPublisher(
+    ILogger<EventPublisher> logger,
+    IServiceProvider serviceProvider) : IEventPublisher
 {
-    public Task PublishAsync(IDomainEvent domainEvent, CancellationToken cancellationToken)
+    public async Task PublishAsync<TEvent>(TEvent domainEvent, CancellationToken cancellationToken = default)
+        where TEvent : IDomainEvent
     {
-        Console.WriteLine($"Event published: {domainEvent.GetType().Name} at {DateTime.UtcNow}");
+        logger.LogInformation("Event published: {@Name} at {Time} UTC",
+            domainEvent.GetType().Name,
+            DateTime.UtcNow);
 
-        return Task.CompletedTask;
+        var handlers = serviceProvider
+           .GetServices<IDomainEventHandler<TEvent>>()
+           .Where(h => h is not null)
+           .ToList();
+
+        if (handlers.Count == 0)
+        {
+            return;
+        }
+
+        foreach (IDomainEventHandler<TEvent> handler in handlers)
+        {
+            await handler.HandleAsync(domainEvent, cancellationToken);
+        }
     }
 }

@@ -2,12 +2,13 @@
 
 namespace Domain.Products;
 
-public class Product
+public class Product : Entity<ProductId>
 {
     private Product()
     { }
 
-    public ProductId Id { get; private set; }
+    private Product(ProductId id) : base(id)
+    { }
 
     public string Name { get; private set; } = string.Empty;
 
@@ -16,9 +17,8 @@ public class Product
     public Sku Sku { get; private set; }
 
     public static Product Create(string name, Money price, Sku sku)
-        => new()
+        => new(new(Guid.NewGuid()))
         {
-            Id = new(Guid.NewGuid()),
             Name = name,
             Price = price,
             Sku = sku,

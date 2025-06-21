@@ -25,7 +25,7 @@ internal partial class ProductConfiguration : IEntityTypeConfiguration<Product>
 
         builder.OwnsOne(p => p.Price, priceBuilder => {
             priceBuilder.Property(m => m.Currency).HasMaxLength(MoneyConstants.CurrencyMaxLength);
-            priceBuilder.Property(m => m.Amount).HasPrecision(2, 2);
+            priceBuilder.Property(m => m.Amount);
         });
     }
 }
