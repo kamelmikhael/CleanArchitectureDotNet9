@@ -2,6 +2,7 @@
 using Rebus.Bus;
 using Rebus.Handlers;
 using Rebus.Sagas;
+using IntegrationEvents.Orders;
 
 namespace SagaRebus.Orders;
 
@@ -10,7 +11,7 @@ internal sealed record OrderPaymentRequestSent(Guid OrderId);
 
 internal class OrderCreateSaga
     : Saga<OrderCreateSagaData>
-    , IAmInitiatedBy<OrderCreatedEvent>
+    , IAmInitiatedBy<OrderCreatedIntegrationEvent>
     , IHandleMessages<OrderConfirmationEmailSent>
     , IHandleMessages<OrderPaymentRequestSent>
 {
@@ -24,12 +25,12 @@ internal class OrderCreateSaga
 
     protected override void CorrelateMessages(ICorrelationConfig<OrderCreateSagaData> config)
     {
-        config.Correlate<OrderCreatedEvent>(m => m.OrderId, sagaData => sagaData.OrderId);
+        config.Correlate<OrderCreatedIntegrationEvent>(m => m.OrderId, sagaData => sagaData.OrderId);
         config.Correlate<OrderConfirmationEmailSent>(m => m.OrderId, sagaData => sagaData.OrderId);
         config.Correlate<OrderPaymentRequestSent>(m => m.OrderId, sagaData => sagaData.OrderId);
     }
 
-    public async Task Handle(OrderCreatedEvent message)
+    public async Task Handle(OrderCreatedIntegrationEvent message)
     {
         if (!IsNew)
         {

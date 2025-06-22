@@ -46,6 +46,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SagaRebus", "Src\External\S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackgroundJobs", "Src\External\BackgroundJobs\BackgroundJobs.csproj", "{DB01BB71-7806-4864-B18E-A1515C820DC0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationEvents", "Src\Core\IntegrationEvents\IntegrationEvents.csproj", "{2B2395AF-C0EB-498A-9D5D-E129A12C6C7E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -104,6 +106,10 @@ Global
 		{DB01BB71-7806-4864-B18E-A1515C820DC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB01BB71-7806-4864-B18E-A1515C820DC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB01BB71-7806-4864-B18E-A1515C820DC0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B2395AF-C0EB-498A-9D5D-E129A12C6C7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B2395AF-C0EB-498A-9D5D-E129A12C6C7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B2395AF-C0EB-498A-9D5D-E129A12C6C7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B2395AF-C0EB-498A-9D5D-E129A12C6C7E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -125,6 +131,7 @@ Global
 		{E5B2F601-4F13-4AE7-AEDE-806311BA5175} = {F1A66655-BB20-4AF4-B6A1-F29CEA282750}
 		{A8FC5976-6944-4075-8C59-66CC24DAEC56} = {F1A66655-BB20-4AF4-B6A1-F29CEA282750}
 		{DB01BB71-7806-4864-B18E-A1515C820DC0} = {F1A66655-BB20-4AF4-B6A1-F29CEA282750}
+		{2B2395AF-C0EB-498A-9D5D-E129A12C6C7E} = {7FA7F78C-DD26-47F5-B23A-6C61572352C3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9E140349-28EC-43CB-8403-F007DE6114B0}
