@@ -1,13 +1,13 @@
 ﻿using Application.Abstractions.Authentication;
 using Domain.Users;
-using Infrastructure.Authentication.Permissions;
+using Security.Authentication.Permissions;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Text;
 
-namespace Infrastructure.Authentication.Jwt;
+namespace Security.Authentication.Jwt;
 
 internal sealed class JwtTokenProvider(
     JwtSettings jwtSettings,

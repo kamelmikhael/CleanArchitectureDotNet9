@@ -48,24 +48,14 @@ internal static class ResultsResponse
         {
             throw new InvalidOperationException();
         }
-        else if (result is { IsFailure: true })
+
+        if (result.Errors.Any(x => x.Type == ErrorType.Validation))
         {
-            if (result.Errors.Any(x => x.Type == ErrorType.Validation))
-            {
-                return Results.BadRequest(
-                        CreateProblemDetails(
-                            "Validation Errors",
-                            StatusCodes.Status400BadRequest,
-                            [.. result.Errors.Where(x => x.Type == ErrorType.Validation)]));
-            }
-            else if (result.Errors.Any(x => x.Type == ErrorType.NotFound))
-            {
-                return Results.NotFound(
-                        CreateProblemDetails(
-                            "Not Found Errors",
-                            StatusCodes.Status404NotFound,
-                            [.. result.Errors.Where(x => x.Type == ErrorType.NotFound)]));
-            }
+            return HandleValidationError(result);
+        }
+        else if (result.Errors.Any(x => x.Type == ErrorType.NotFound))
+        {
+            return HandleNotFoundError(result);
         }
 
         return Results.BadRequest(
@@ -73,6 +63,35 @@ internal static class ResultsResponse
                             "Bad Request",
                             StatusCodes.Status400BadRequest,
                             [.. result.Errors.Where(x => x != Error.None)]));
+    }
+
+    private static IResult HandleNotFoundError(Result result)
+    {
+        return Results.NotFound(
+                                CreateProblemDetails(
+                                    "Not Found Errors",
+                                    StatusCodes.Status404NotFound,
+                                    [.. result.Errors.Where(x => x.Type == ErrorType.NotFound)]));
+    }
+
+    private static IResult HandleValidationError(Result result)
+    {
+        var validationError = result.Errors.FirstOrDefault() as ValidationError;
+
+        if (validationError?.Errors?.Length > 0)
+        {
+            return Results.BadRequest(
+                    CreateProblemDetails(
+                        "Validation Errors",
+                        StatusCodes.Status400BadRequest,
+                        errors: validationError?.Errors));
+        }
+
+        return Results.BadRequest(
+                    CreateProblemDetails(
+                        "Validation Errors",
+                        StatusCodes.Status400BadRequest,
+                        [.. result.Errors.Where(x => x.Type == ErrorType.Validation)]));
     }
 
     private static ProblemDetails CreateProblemDetails(

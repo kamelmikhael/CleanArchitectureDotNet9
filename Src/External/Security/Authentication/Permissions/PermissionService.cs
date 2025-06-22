@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
-namespace Infrastructure.Authentication.Permissions;
+namespace Security.Authentication.Permissions;
 
 public class PermissionService(ApplicationDbContext dbContext) : IPermissionService
 {

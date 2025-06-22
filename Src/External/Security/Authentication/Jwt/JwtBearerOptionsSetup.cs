@@ -3,7 +3,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-namespace Infrastructure.Authentication.Jwt;
+namespace Security.Authentication.Jwt;
 
 public class JwtBearerOptionsSetup(JwtSettings jwtSettings) : IConfigureOptions<JwtBearerOptions>
 {

@@ -22,7 +22,7 @@ public sealed class CreateProduct
             RuleFor(x => x.Name).NotEmpty();
             RuleFor(x => x.Currency).NotEmpty();
             RuleFor(x => x.Amount).Must(x => x > 0 && x < 1000);
-            RuleFor(x => x.Sku).NotEmpty();
+            RuleFor(x => x.Sku).NotEmpty().Length(Sku.DefaultLength, Sku.DefaultLength);
         }
     }
 

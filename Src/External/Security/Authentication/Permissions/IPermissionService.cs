@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.Authentication.Permissions;
+﻿namespace Security.Authentication.Permissions;
 
 public interface IPermissionService
 {

@@ -26,6 +26,11 @@ public class Product : Entity<ProductId>
 
     public void SetName(string name)
     {
+        if (Name.Equals(name, StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
         Name = name;
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.Authentication.Jwt;
+﻿namespace Security.Authentication.Jwt;
 
 internal static class CustomClaims
 {

@@ -5,7 +5,7 @@
 /// </summary>
 public record Sku
 {
-    private const int DefaultLength = 15;
+    public const int DefaultLength = 8;
 
     private Sku(string value) => Value = value;
 
@@ -13,12 +13,7 @@ public record Sku
 
     public static Sku? Create(string value)
     {
-        if (string.IsNullOrEmpty(value))
-        {
-            return null;
-        }
-
-        if (value.Length != DefaultLength)
+        if (string.IsNullOrEmpty(value) || value.Length != DefaultLength)
         {
             return null;
         }

@@ -9,4 +9,6 @@ namespace Domain.Orders;
 /// from an order, enabling actions such as updating order summaries or triggering workflows.</remarks>
 /// <param name="OrderId"></param>
 /// <param name="LineItemId"></param>
-public sealed record LineItemRemovedDomainEvent(OrderId OrderId, LineItemId LineItemId) : IDomainEvent;
+public sealed record LineItemRemovedDomainEvent(
+    OrderId OrderId, 
+    LineItemId LineItemId) : IDomainEvent;

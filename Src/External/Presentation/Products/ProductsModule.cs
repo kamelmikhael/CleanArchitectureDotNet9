@@ -24,7 +24,7 @@ public class ProductsModule : CarterModule
     public override void AddRoutes(IEndpointRouteBuilder app)
     {
         app.MapPost("/", async (
-            CreateProductRequest requset
+            [FromBody] CreateProductRequest requset
             , ICommandHandler<CreateProduct.Command> handler
             , CancellationToken cancellationToken) => await Result
                 .Create(requset.Adapt<CreateProduct.Command>())

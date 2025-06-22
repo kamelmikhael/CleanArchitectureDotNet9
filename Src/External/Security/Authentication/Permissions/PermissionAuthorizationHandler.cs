@@ -1,10 +1,10 @@
-﻿using Infrastructure.Authentication.Jwt;
+﻿using Security.Authentication.Jwt;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.JsonWebTokens;
 using System.Collections.Generic;
 
-namespace Infrastructure.Authentication.Permissions;
+namespace Security.Authentication.Permissions;
 
 public class PermissionAuthorizationHandler(IServiceScopeFactory serviceScopeFactory)
     : AuthorizationHandler<PermissionRequirement>

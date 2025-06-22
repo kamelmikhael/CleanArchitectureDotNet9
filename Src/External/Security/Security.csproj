@@ -8,12 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Core\Application\Application.csproj" />
-    <ProjectReference Include="..\BackgroundJobs\BackgroundJobs.csproj" />
-    <ProjectReference Include="..\Caching\Caching.csproj" />
-    <ProjectReference Include="..\MessageBroker\MessageBroker.csproj" />
     <ProjectReference Include="..\Persistence\Persistence.csproj" />
-    <ProjectReference Include="..\SagaRebus\SagaRebus.csproj" />
-    <ProjectReference Include="..\Security\Security.csproj" />
   </ItemGroup>
 
 </Project>
