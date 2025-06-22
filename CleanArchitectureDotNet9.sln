@@ -48,6 +48,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackgroundJobs", "Src\Exter
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationEvents", "Src\Core\IntegrationEvents\IntegrationEvents.csproj", "{2B2395AF-C0EB-498A-9D5D-E129A12C6C7E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain.UnitTests", "Tests\Domain.UnitTests\Domain.UnitTests.csproj", "{9491FBED-1055-420E-8DD8-D97B5F638A89}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -110,6 +112,10 @@ Global
 		{2B2395AF-C0EB-498A-9D5D-E129A12C6C7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2B2395AF-C0EB-498A-9D5D-E129A12C6C7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2B2395AF-C0EB-498A-9D5D-E129A12C6C7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9491FBED-1055-420E-8DD8-D97B5F638A89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9491FBED-1055-420E-8DD8-D97B5F638A89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9491FBED-1055-420E-8DD8-D97B5F638A89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9491FBED-1055-420E-8DD8-D97B5F638A89}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -132,6 +138,7 @@ Global
 		{A8FC5976-6944-4075-8C59-66CC24DAEC56} = {F1A66655-BB20-4AF4-B6A1-F29CEA282750}
 		{DB01BB71-7806-4864-B18E-A1515C820DC0} = {F1A66655-BB20-4AF4-B6A1-F29CEA282750}
 		{2B2395AF-C0EB-498A-9D5D-E129A12C6C7E} = {7FA7F78C-DD26-47F5-B23A-6C61572352C3}
+		{9491FBED-1055-420E-8DD8-D97B5F638A89} = {A6D7105F-8BAD-4AF3-8C27-BF9A36C35D33}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9E140349-28EC-43CB-8403-F007DE6114B0}

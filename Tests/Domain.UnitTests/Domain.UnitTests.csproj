@@ -6,16 +6,13 @@
 
   <ItemGroup>
     <PackageReference Include="coverlet.collector" />
-    <PackageReference Include="FluentAssertions" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Common" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
-    <PackageReference Include="NetArchTest.Rules" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Src\Web\Api\Api.csproj" />
+    <ProjectReference Include="..\..\Src\Core\Domain\Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

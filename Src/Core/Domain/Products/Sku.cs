@@ -18,10 +18,10 @@ public record Sku
             return null;
         }
 
-        //if(value.Length !=  DefaultLength)
-        //{
-        //    return null;
-        //}
+        if (value.Length != DefaultLength)
+        {
+            return null;
+        }
 
         return new(value);
     }
