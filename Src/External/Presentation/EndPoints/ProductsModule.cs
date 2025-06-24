@@ -11,7 +11,7 @@ using Presentation.Extensions;
 using SharedKernal.Primitives;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Presentation.Products;
+namespace Presentation.EndPoints;
 
 public class ProductsModule : CarterModule
 {

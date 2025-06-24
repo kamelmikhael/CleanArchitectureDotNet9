@@ -11,7 +11,7 @@ using SharedKernal.Primitives;
 using Presentation.Extensions;
 using Microsoft.AspNetCore.Http;
 
-namespace Presentation.Users;
+namespace Presentation.EndPoints;
 
 public class UsersModule : CarterModule
 {

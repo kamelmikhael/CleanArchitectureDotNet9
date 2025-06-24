@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Routing;
 using Presentation.Extensions;
 using SharedKernal.Primitives;
 
-namespace Presentation.Orders;
+namespace Presentation.EndPoints;
 
 //[EnableRateLimiting("fixed")]
 //[DisableRateLimiting]

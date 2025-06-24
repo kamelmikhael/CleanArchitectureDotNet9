@@ -3,12 +3,11 @@ using Application.Customers.Create;
 using Carter;
 using Mapster;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Presentation.Extensions;
 using SharedKernal.Primitives;
 
-namespace Presentation.Customers;
+namespace Presentation.EndPoints;
 
 public class CustomersModule : CarterModule
 {
