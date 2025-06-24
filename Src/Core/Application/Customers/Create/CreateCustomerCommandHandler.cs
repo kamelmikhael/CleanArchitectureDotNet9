@@ -17,6 +17,6 @@ public sealed class CreateCustomerCommandHandler(
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return Result.Success();
+        return Result.Success(customer.Id.Value);
     }
 }
