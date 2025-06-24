@@ -18,7 +18,7 @@ public class Order : Entity<OrderId>
 
     public IReadOnlyList<LineItem> LineItems => [.. _lineItems];
 
-    public void Add(ProductId productId, Money price, int quantity)
+    public void AddLineItem(ProductId productId, Money price, int quantity)
         => _lineItems.Add(new(
                 new(Guid.NewGuid()), 
                 Id, 
