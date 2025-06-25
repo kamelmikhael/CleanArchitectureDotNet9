@@ -9,6 +9,7 @@ using Persistence.Repositories;
 using Persistence.Repositories.Customers;
 using Persistence.Repositories.Orders;
 using Scrutor;
+using SharedKernal.Abstraction.Data;
 using SharedKernal.Abstractions.Data;
 
 namespace Persistence;

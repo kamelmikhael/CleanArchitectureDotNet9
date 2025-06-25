@@ -1,7 +1,7 @@
 ﻿using SharedKernal.Primitives;
 using System.Linq.Expressions;
 
-namespace SharedKernal.Abstractions.Data;
+namespace SharedKernal.Abstraction.Data;
 
 public interface IRepository<TEntity> : IRepository<TEntity, Guid>
     where TEntity : Entity
@@ -23,7 +23,22 @@ public interface IRepository<TEntity, TKey>
     Task<IEnumerable<TEntity>> ToListAsync(Expression<Func<TEntity, bool>> predicate,
         CancellationToken cancellationToken = default);
 
+    Task<IEnumerable<TEntity>> ToListAsync(
+        List<(bool condition, Expression<Func<TEntity, bool>> predicate)> predicates,
+        CancellationToken cancellationToken = default);
+
+    Task<(IEnumerable<TEntity>, int)> ToPagedListAsync(
+        int pageIndex = 0,
+        int pageSize = 10,
+        CancellationToken cancellationToken = default);
+
     Task<(IEnumerable<TEntity>, int)> ToPagedListAsync(Expression<Func<TEntity, bool>> predicate,
+        int pageIndex = 0,
+        int pageSize = 10,
+        CancellationToken cancellationToken = default);
+
+    Task<(IEnumerable<TEntity>, int)> ToPagedListAsync(
+        List<(bool condition, Expression<Func<TEntity, bool>> predicate)> predicates,
         int pageIndex = 0,
         int pageSize = 10,
         CancellationToken cancellationToken = default);

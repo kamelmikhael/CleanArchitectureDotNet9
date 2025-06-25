@@ -1,5 +1,6 @@
 ﻿using Application.Abstractions.Messaging;
 using Domain.Products;
+using SharedKernal.Abstraction.Data;
 using SharedKernal.Abstractions;
 using SharedKernal.Abstractions.Data;
 using SharedKernal.Primitives;

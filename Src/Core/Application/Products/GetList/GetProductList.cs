@@ -1,7 +1,7 @@
 ﻿using Application.Abstractions.Messaging;
 using Domain.Products;
 using SharedKernal.Abstraction.Caching;
-using SharedKernal.Abstractions.Data;
+using SharedKernal.Abstraction.Data;
 using SharedKernal.Primitives;
 
 namespace Application.Products.GetList;

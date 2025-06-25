@@ -1,8 +1,9 @@
-﻿using System.Linq.Expressions;
+﻿using System;
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
+using Persistence.Extensions;
 using Persistence.Specifications;
-using SharedKernal.Abstractions.Data;
+using SharedKernal.Abstraction.Data;
 using SharedKernal.Primitives;
 
 namespace Persistence.Repositories;
@@ -51,6 +52,34 @@ public class Repository<TEntity, TKey> : IRepository<TEntity, TKey>
         CancellationToken cancellationToken = default)
         => await _dbSet.Where(predicate).ToListAsync(cancellationToken);
 
+    public virtual async Task<IEnumerable<TEntity>> ToListAsync(
+        List<(bool condition, Expression<Func<TEntity, bool>> predicate)> predicates,
+        CancellationToken cancellationToken = default)
+    {
+        IQueryable<TEntity> query = _dbSet.AsQueryable();
+        predicates.ForEach((item) => query = query.WhereIf(item.condition, item.predicate));
+        return await query.ToListAsync(cancellationToken);
+    }
+
+    public async Task<(IEnumerable<TEntity>, int)> ToPagedListAsync(
+        int pageIndex = 0,
+        int pageSize = 10,
+        CancellationToken cancellationToken = default)
+    {
+        IQueryable<TEntity> query = _dbSet
+            .AsNoTracking()
+            .AsQueryable();
+
+        return (
+            await query
+                .OrderBy(x => x.Id)
+                .Skip(pageIndex * pageSize)
+                .Take(pageSize)
+                .ToListAsync(cancellationToken),
+            await query.CountAsync(cancellationToken)
+        );
+    }
+
     public async Task<(IEnumerable<TEntity>, int)> ToPagedListAsync(
         Expression<Func<TEntity, bool>> predicate,
         int pageIndex = 0, 
@@ -61,6 +90,28 @@ public class Repository<TEntity, TKey> : IRepository<TEntity, TKey>
             .Where(predicate)
             .AsNoTracking()
             .AsQueryable();
+
+        return (
+            await query
+                .OrderBy(x => x.Id)
+                .Skip(pageIndex * pageSize)
+                .Take(pageSize)
+                .ToListAsync(cancellationToken),
+            await query.CountAsync(cancellationToken)
+        );
+    }
+
+    public async Task<(IEnumerable<TEntity>, int)> ToPagedListAsync(
+        List<(bool condition, Expression<Func<TEntity, bool>> predicate)> predicates,
+        int pageIndex = 0,
+        int pageSize = 10,
+        CancellationToken cancellationToken = default)
+    {
+        IQueryable<TEntity> query = _dbSet
+            .AsNoTracking()
+            .AsQueryable();
+
+        predicates.ForEach((item) => query = query.WhereIf(item.condition, item.predicate));
 
         return (
             await query

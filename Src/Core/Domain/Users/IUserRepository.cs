@@ -1,4 +1,4 @@
-﻿using SharedKernal.Abstractions.Data;
+﻿using SharedKernal.Abstraction.Data;
 
 namespace Domain.Users;
 
