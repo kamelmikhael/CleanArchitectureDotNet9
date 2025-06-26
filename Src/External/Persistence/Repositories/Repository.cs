@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Extensions;
 using Persistence.Specifications;
@@ -48,64 +47,53 @@ public class Repository<TEntity, TKey> : IRepository<TEntity, TKey>
         => await _dbSet.ToListAsync(cancellationToken);
 
     public virtual async Task<IEnumerable<TEntity>> ToListAsync(
-        Expression<Func<TEntity, bool>> predicate,
-        CancellationToken cancellationToken = default)
-        => await _dbSet.Where(predicate).ToListAsync(cancellationToken);
-
-    public virtual async Task<IEnumerable<TEntity>> ToListAsync(
-        List<(bool condition, Expression<Func<TEntity, bool>> predicate)> predicates,
-        CancellationToken cancellationToken = default)
+        string? sortOrder = null,
+        Expression<Func<TEntity, object>>? keySelector = null,
+        CancellationToken cancellationToken = default,
+        params List<(bool condition, Expression<Func<TEntity, bool>> predicate)> predicates)
     {
         IQueryable<TEntity> query = _dbSet.AsQueryable();
+
         predicates.ForEach((item) => query = query.WhereIf(item.condition, item.predicate));
+
+        if (keySelector is not null && sortOrder is not null)
+        {
+            query = sortOrder.Equals("desc", StringComparison.OrdinalIgnoreCase)
+                ? query.OrderByDescending(keySelector)
+                : query.OrderBy(keySelector);
+        }
+
         return await query.ToListAsync(cancellationToken);
     }
 
-    public async Task<(IEnumerable<TEntity>, int)> ToPagedListAsync(
-        int pageIndex = 0,
-        int pageSize = 10,
-        CancellationToken cancellationToken = default)
+    public virtual async Task<IEnumerable<TResult>> ToListAsync<TResult>(
+        Expression<Func<TEntity, TResult>> selector,
+        string? sortOrder = null,
+        Expression<Func<TEntity, object>>? keySelector = null,
+        CancellationToken cancellationToken = default,
+        params List<(bool condition, Expression<Func<TEntity, bool>> predicate)> predicates)
     {
-        IQueryable<TEntity> query = _dbSet
-            .AsNoTracking()
-            .AsQueryable();
+        IQueryable<TEntity> query = _dbSet.AsQueryable();
 
-        return (
-            await query
-                .OrderBy(x => x.Id)
-                .Skip(pageIndex * pageSize)
-                .Take(pageSize)
-                .ToListAsync(cancellationToken),
-            await query.CountAsync(cancellationToken)
-        );
+        predicates.ForEach((item) => query = query.WhereIf(item.condition, item.predicate));
+
+        if (keySelector is not null && sortOrder is not null)
+        {
+            query = sortOrder.Equals("desc", StringComparison.OrdinalIgnoreCase)
+                ? query.OrderByDescending(keySelector)
+                : query.OrderBy(keySelector);
+        }
+
+        return await query.Select(selector).ToListAsync(cancellationToken);
     }
 
     public async Task<(IEnumerable<TEntity>, int)> ToPagedListAsync(
-        Expression<Func<TEntity, bool>> predicate,
-        int pageIndex = 0, 
-        int pageSize = 10, 
-        CancellationToken cancellationToken = default)
-    {
-        IQueryable<TEntity> query = _dbSet
-            .Where(predicate)
-            .AsNoTracking()
-            .AsQueryable();
-
-        return (
-            await query
-                .OrderBy(x => x.Id)
-                .Skip(pageIndex * pageSize)
-                .Take(pageSize)
-                .ToListAsync(cancellationToken),
-            await query.CountAsync(cancellationToken)
-        );
-    }
-
-    public async Task<(IEnumerable<TEntity>, int)> ToPagedListAsync(
-        List<(bool condition, Expression<Func<TEntity, bool>> predicate)> predicates,
+        string? sortOrder = null,
+        Expression<Func<TEntity, object>>? keySelector = null,
         int pageIndex = 0,
         int pageSize = 10,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default,
+        params List<(bool condition, Expression<Func<TEntity, bool>> predicate)> predicates)
     {
         IQueryable<TEntity> query = _dbSet
             .AsNoTracking()
@@ -113,11 +101,49 @@ public class Repository<TEntity, TKey> : IRepository<TEntity, TKey>
 
         predicates.ForEach((item) => query = query.WhereIf(item.condition, item.predicate));
 
+        if (keySelector is not null && sortOrder is not null)
+        {
+            query = sortOrder.Equals("desc", StringComparison.OrdinalIgnoreCase)
+                ? query.OrderByDescending(keySelector)
+                : query.OrderBy(keySelector);
+        }
+
         return (
             await query
-                .OrderBy(x => x.Id)
                 .Skip(pageIndex * pageSize)
                 .Take(pageSize)
+                .ToListAsync(cancellationToken),
+            await query.CountAsync(cancellationToken)
+        );
+    }
+
+    public async Task<(IEnumerable<TResult>, int)> ToPagedListAsync<TResult>(
+        Expression<Func<TEntity, TResult>> selector,
+        string? sortOrder = null,
+        Expression<Func<TEntity, object>>? keySelector = null,
+        int pageIndex = 0,
+        int pageSize = 10,
+        CancellationToken cancellationToken = default,
+        params List<(bool condition, Expression<Func<TEntity, bool>> predicate)> predicates)
+    {
+        IQueryable<TEntity> query = _dbSet
+            .AsNoTracking()
+            .AsQueryable();
+
+        predicates.ForEach((item) => query = query.WhereIf(item.condition, item.predicate));
+
+        if (keySelector is not null && sortOrder is not null)
+        {
+            query = sortOrder.Equals("desc", StringComparison.OrdinalIgnoreCase)
+                ? query.OrderByDescending(keySelector)
+                : query.OrderBy(keySelector);
+        }
+
+        return (
+            await query
+                .Skip(pageIndex * pageSize)
+                .Take(pageSize)
+                .Select(selector)
                 .ToListAsync(cancellationToken),
             await query.CountAsync(cancellationToken)
         );

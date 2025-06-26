@@ -20,28 +20,35 @@ public interface IRepository<TEntity, TKey>
 
     Task<IEnumerable<TEntity>> ToListAsync(CancellationToken cancellationToken = default);
 
-    Task<IEnumerable<TEntity>> ToListAsync(Expression<Func<TEntity, bool>> predicate,
-        CancellationToken cancellationToken = default);
-
     Task<IEnumerable<TEntity>> ToListAsync(
-        List<(bool condition, Expression<Func<TEntity, bool>> predicate)> predicates,
-        CancellationToken cancellationToken = default);
+        string? sortOrder = null,
+        Expression<Func<TEntity, object>>? keySelector = null,
+        CancellationToken cancellationToken = default,
+        params List<(bool condition, Expression<Func<TEntity, bool>> predicate)> predicates);
+
+    Task<IEnumerable<TResult>> ToListAsync<TResult>(
+        Expression<Func<TEntity, TResult>> selector,
+        string? sortOrder = null,
+        Expression<Func<TEntity, object>>? keySelector = null,
+        CancellationToken cancellationToken = default,
+        params List<(bool condition, Expression<Func<TEntity, bool>> predicate)> predicates);
 
     Task<(IEnumerable<TEntity>, int)> ToPagedListAsync(
+        string? sortOrder = null,
+        Expression<Func<TEntity, object>>? keySelector = null,
         int pageIndex = 0,
         int pageSize = 10,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken = default,
+        params List<(bool condition, Expression<Func<TEntity, bool>> predicate)> predicates);
 
-    Task<(IEnumerable<TEntity>, int)> ToPagedListAsync(Expression<Func<TEntity, bool>> predicate,
+    Task<(IEnumerable<TResult>, int)> ToPagedListAsync<TResult>(
+        Expression<Func<TEntity, TResult>> selector,
+        string? sortOrder = null,
+        Expression<Func<TEntity, object>>? keySelector = null,
         int pageIndex = 0,
         int pageSize = 10,
-        CancellationToken cancellationToken = default);
-
-    Task<(IEnumerable<TEntity>, int)> ToPagedListAsync(
-        List<(bool condition, Expression<Func<TEntity, bool>> predicate)> predicates,
-        int pageIndex = 0,
-        int pageSize = 10,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken = default,
+        params List<(bool condition, Expression<Func<TEntity, bool>> predicate)> predicates);
 
     Task<int> CountAsync(CancellationToken cancellationToken = default);
 

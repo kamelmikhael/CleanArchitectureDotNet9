@@ -1,15 +1,16 @@
 ﻿using Application.Abstractions.Messaging;
 using Application.Products.Create;
-using Application.Products.GetList;
 using Application.Products.Delete;
+using Application.Products.GetList;
+using Application.Products.GetPagedList;
 using Application.Products.Update;
 using Carter;
 using Mapster;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Presentation.Extensions;
 using SharedKernal.Primitives;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.EndPoints;
 
@@ -41,6 +42,18 @@ public class ProductsModule : CarterModule
                 .Match(
                     ResultsResponse.HandleSuccess,
                     ResultsResponse.HandleFailure));
+
+        app.MapPost("/search", async (
+            ProductsPagedRequest request
+            , IPagedQueryHandler <GetProductsPaged.Query, ProductsPagedResponse> handler
+            , CancellationToken cancellationToken) =>
+        {
+            var query = new GetProductsPaged.Query(request);
+
+            PagedResult<ProductsPagedResponse> response = await handler.Handle(query, cancellationToken);
+
+            return ResultsResponse.Handle(response);
+        });
 
         app.MapDelete("/{id:guid}", async (
             Guid id

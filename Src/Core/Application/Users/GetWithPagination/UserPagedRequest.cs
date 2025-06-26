@@ -2,7 +2,7 @@
 
 namespace Application.Users.GetWithPagination;
 
-public class UserPagedRequest : PagedRequest
+public sealed class UserPagedRequest : PagedRequest
 {
     /// <summary>
     /// Search Keyword
