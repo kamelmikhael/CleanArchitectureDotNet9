@@ -1,11 +1,13 @@
-﻿using Infrastructure.Services;
+﻿using Application;
+using Application.Orders.Services;
+using Caching;
+using Infrastructure.Orders.Services;
+using Infrastructure.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SharedKernal.Abstractions;
-using Caching;
 using Persistence;
-using Application;
 using Security;
+using SharedKernal.Abstractions;
 
 namespace Infrastructure;
 
@@ -31,6 +33,7 @@ public static class DependencyInjection
         this IServiceCollection services)
     {
         services.AddScoped<IEventPublisher, EventPublisher>();
+        services.AddScoped<IGetOrderByIdService, GetOrderByIdService>();
 
         return services;
     }

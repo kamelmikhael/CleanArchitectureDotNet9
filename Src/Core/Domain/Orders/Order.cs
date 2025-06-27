@@ -19,13 +19,39 @@ public class Order : Entity<OrderId>
     public IReadOnlyList<LineItem> LineItems => [.. _lineItems];
 
     public void AddLineItem(ProductId productId, Money price, int quantity)
-        => _lineItems.Add(new(
-                new(Guid.NewGuid()), 
-                Id, 
-                productId, 
-                price, 
-                quantity)
-            );
+    {
+        var lineItem = new LineItem(
+                new(Guid.NewGuid()),
+                Id,
+                productId,
+                price,
+                quantity);
+
+        _lineItems.Add(lineItem);
+
+        Raise(new LineItemAddedDomainEvent(Id, lineItem.Id));
+    }
+
+    public void RemoveLineItem(LineItemId lineItemId)
+    {
+        if (HasOneLineItem())
+        {
+            return;
+        }
+
+        LineItem? lineItem = _lineItems.FirstOrDefault(li => li.Id == lineItemId);
+
+        if (lineItem is null)
+        {
+            return;
+        }
+
+        _lineItems.Remove(lineItem);
+
+        Raise(new LineItemRemovedDomainEvent(Id, lineItemId));
+    }
+
+    public bool HasOneLineItem() => _lineItems.Count == 1;
 
     public static Order Create(CustomerId customerId)
     {
@@ -37,19 +63,5 @@ public class Order : Entity<OrderId>
         order.Raise(new OrderCreatedDomainEvent(order.Id));
 
         return order;
-    }
-
-    public void RemoveLineItem(LineItemId lineItemId)
-    {
-        LineItem? lineItem = _lineItems.FirstOrDefault(li => li.Id == lineItemId);
-
-        if (lineItem is null)
-        {
-            return;
-        }
-
-        _lineItems.Remove(lineItem);
-
-        Raise(new LineItemRemovedDomainEvent(Id, lineItemId));
     }
 }

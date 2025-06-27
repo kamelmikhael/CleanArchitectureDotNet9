@@ -1,4 +1,5 @@
 ﻿using Application.Abstractions.Messaging;
+using Application.Orders.Services;
 using Domain.Orders;
 using SharedKernal.Abstractions.Data;
 using SharedKernal.Primitives;
@@ -6,16 +7,11 @@ using SharedKernal.Primitives;
 namespace Application.Orders.RemoveLineItem;
 
 internal sealed class RemoveLineItemCommandHandler(
-    IOrderRepository orderRepository,
-    IUnitOfWork unitOfWork) : ICommandHandler<RemoveLineItemCommand>
+    IGetOrderByIdService orderService) : ICommandHandler<RemoveLineItemCommand>
 {
     public async Task<Result> Handle(RemoveLineItemCommand command, CancellationToken cancellationToken)
     {
-        Order? order = await orderRepository
-            .GetByOrderIdWithLineItemByIdAsync(
-                command.OrderId,
-                command.LineItemId,
-                cancellationToken);
+        Order? order = await orderService.ExecuteAsync(command.OrderId, cancellationToken);
 
         if (order is null)
         {
@@ -24,8 +20,6 @@ internal sealed class RemoveLineItemCommandHandler(
 
         order.RemoveLineItem(command.LineItemId);
 
-        await unitOfWork.SaveChangesAsync(cancellationToken);
-
-        return Result.Success(order);
+        return Result.Success();
     }
 }

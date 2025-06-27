@@ -1,9 +1,11 @@
 ﻿using Application.Abstractions.Messaging;
+using Application.Orders.AddLineItem;
 using Application.Orders.Create;
 using Application.Orders.GetById;
 using Application.Orders.RemoveLineItem;
 using Carter;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.Routing;
 using Presentation.Extensions;
@@ -60,6 +62,18 @@ public class OrdersModule : CarterModule
                     ResultsResponse.HandleSuccess,
                     ResultsResponse.HandleFailure)
                 );
-            //.RequireRateLimiting("fixed");
+        //.RequireRateLimiting("fixed");
+
+        app.MapPut("/{id:guid}/line-items", async (Guid id
+            , [FromBody] AddLineItemRequest request,
+            ICommandHandler<AddLineItemCommand> handler,
+            CancellationToken cancellationToken)
+            => await Result
+                .Create(new AddLineItemCommand(new(id), new(request.ProductId), request.Qty))
+                .Bind(query => handler.Handle(query, cancellationToken))
+                .Match(
+                    ResultsResponse.HandleSuccess,
+                    ResultsResponse.HandleFailure)
+                );
     }
 }
