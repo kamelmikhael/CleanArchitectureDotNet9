@@ -18,7 +18,7 @@ public class Order : Entity<OrderId>
 
     public IReadOnlyList<LineItem> LineItems => [.. _lineItems];
 
-    public void AddLineItem(ProductId productId, Money price, int quantity)
+    public Result<LineItem> AddLineItem(ProductId productId, Money price, int quantity)
     {
         var lineItem = new LineItem(
                 new(Guid.NewGuid()),
@@ -30,6 +30,8 @@ public class Order : Entity<OrderId>
         _lineItems.Add(lineItem);
 
         Raise(new LineItemAddedDomainEvent(Id, lineItem.Id));
+
+        return lineItem;
     }
 
     public void RemoveLineItem(LineItemId lineItemId)
