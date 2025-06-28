@@ -3,14 +3,14 @@
 public class PagedResult<TValue> : Result
 {
     protected internal PagedResult(
-        List<TValue> data,
+        List<TValue> items,
         int totalCount,
         int pageIndex,
         int pageSize,
         bool isSuccess,
         Error error) : base(isSuccess, error)
     {
-        Data = data;
+        Items = items;
         PageIndex = pageIndex;
         PageSize = pageSize;
         TotalCount = totalCount;
@@ -18,14 +18,14 @@ public class PagedResult<TValue> : Result
     }
 
     protected internal PagedResult(
-        List<TValue> data,
+        List<TValue> items,
         int totalCount,
         int pageIndex,
         int pageSize, 
         bool isSuccess, 
         Error[] errors) : base(isSuccess, errors)
     {
-        Data = data;
+        Items = items;
         PageIndex = pageIndex;
         PageSize = pageSize;
         TotalCount = totalCount;
@@ -33,9 +33,9 @@ public class PagedResult<TValue> : Result
     }
 
     /// <summary>
-    /// The data result.
+    /// The items result.
     /// </summary>
-    public List<TValue> Data { get; private set; }
+    public List<TValue> Items { get; private set; }
 
     /// <summary>
     /// Zero-based index of current page.
@@ -69,12 +69,12 @@ public class PagedResult<TValue> : Result
     public bool HasNextPage => PageIndex + 1 < TotalPages;
 
     public static PagedResult<TValue> Create(
-        List<TValue> data,
+        List<TValue> items,
         int totalCount,
         int pageIndex,
         int pageSize)
         => new(
-            data,
+            items,
             totalCount,
             pageIndex,
             pageSize,
