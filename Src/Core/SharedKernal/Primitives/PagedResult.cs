@@ -1,6 +1,6 @@
 ﻿namespace SharedKernal.Primitives;
 
-public class PagedResult<TValue> : Result
+public class PagedResult<TValue> : Result<List<TValue>>
 {
     protected internal PagedResult(
         List<TValue> items,
@@ -8,9 +8,8 @@ public class PagedResult<TValue> : Result
         int pageIndex,
         int pageSize,
         bool isSuccess,
-        Error error) : base(isSuccess, error)
+        Error error) : base(items, isSuccess, error)
     {
-        Items = items;
         PageIndex = pageIndex;
         PageSize = pageSize;
         TotalCount = totalCount;
@@ -23,19 +22,13 @@ public class PagedResult<TValue> : Result
         int pageIndex,
         int pageSize, 
         bool isSuccess, 
-        Error[] errors) : base(isSuccess, errors)
+        Error[] errors) : base(items, isSuccess, errors)
     {
-        Items = items;
         PageIndex = pageIndex;
         PageSize = pageSize;
         TotalCount = totalCount;
         TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
     }
-
-    /// <summary>
-    /// The items result.
-    /// </summary>
-    public List<TValue> Items { get; private set; }
 
     /// <summary>
     /// Zero-based index of current page.

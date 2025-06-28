@@ -4,6 +4,7 @@ using Persistence;
 using Persistence.Outbox;
 using Polly;
 using Quartz;
+using Rebus.Config;
 using SharedKernal.Abstraction;
 using SharedKernal.Abstractions;
 
