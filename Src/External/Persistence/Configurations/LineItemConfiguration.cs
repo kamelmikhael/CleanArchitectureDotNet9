@@ -28,5 +28,7 @@ internal partial class LineItemConfiguration : IEntityTypeConfiguration<LineItem
             .WithMany()
             .HasForeignKey(li => li.ProductId)
             .IsRequired();
+
+        builder.Property<uint>("Version").IsRowVersion();
     }
 }
