@@ -26,7 +26,7 @@ public class ProductsModule : CarterModule
     {
         app.MapPost("/", async (
             [FromBody] CreateProductRequest requset
-            , ICommandHandler<CreateProduct.Command> handler
+            , ICommandHandler<CreateProduct.Command, Guid> handler
             , CancellationToken cancellationToken) => await Result
                 .Create(requset.Adapt<CreateProduct.Command>())
                 .Bind(command => handler.Handle(command, cancellationToken))

@@ -14,7 +14,7 @@ public sealed class CreateProduct
         string Name,
         string Currency,
         decimal Amount,
-        string Sku) : ICommand;
+        string Sku) : ICommand<Guid>;
 
     internal sealed class Validator : AbstractValidator<Command>
     {
@@ -30,9 +30,9 @@ public sealed class CreateProduct
     internal sealed class Handler(
         IRepository<Product, ProductId> repository,
         IUnitOfWork unitOfWork,
-        IEventPublisher publisher) : ICommandHandler<Command>
+        IEventPublisher publisher) : ICommandHandler<Command, Guid>
     {
-        public async Task<Result> Handle(Command command, CancellationToken cancellationToken)
+        public async Task<Result<Guid>> Handle(Command command, CancellationToken cancellationToken)
         {
             var money = new Money(command.Currency, command.Amount);
             var sku = Sku.Create(command.Sku);
@@ -45,7 +45,7 @@ public sealed class CreateProduct
 
             await publisher.PublishAsync(new ProductCreatedDomainEvent(product.Id.Value), cancellationToken);
 
-            return Result.Success(product.Id.Value);
+            return product.Id.Value;
         }
     }
 }
