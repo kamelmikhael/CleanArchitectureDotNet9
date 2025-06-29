@@ -22,5 +22,7 @@ internal partial class CustomerConfiguration : IEntityTypeConfiguration<Customer
         builder.Property(c => c.Email).HasMaxLength(CustomerConstants.EmailMaxLength);
 
         builder.HasIndex(c => c.Email).IsUnique();
+
+        builder.Property<uint>("Version").IsRowVersion();
     }
 }
