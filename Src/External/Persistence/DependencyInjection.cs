@@ -4,11 +4,9 @@ using Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Persistence.Interceptors;
 using Persistence.Repositories;
 using Persistence.Repositories.Customers;
 using Persistence.Repositories.Orders;
-using Scrutor;
 using SharedKernal.Abstraction.Data;
 using SharedKernal.Abstractions.Data;
 

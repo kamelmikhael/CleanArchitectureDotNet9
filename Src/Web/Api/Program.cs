@@ -3,6 +3,7 @@ using Carter;
 using Infrastructure;
 using Microsoft.AspNetCore.RateLimiting;
 using Presentation;
+using Persistence.Extensions;
 using Presentation.MiddleWares;
 using Serilog;
 
@@ -61,6 +62,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
     //app.MapOpenApi();
+    app.ApplyMigrations();
 }
 
 // used to log HTTP Api request coming to Our ASP API
