@@ -39,7 +39,7 @@ internal sealed class UnitOfWork(ApplicationDbContext context)
     private void ConvertDomainEventsToOutboxMessages()
     {
         var outboxMessages = context.ChangeTracker
-            .Entries<Entity>()
+            .Entries<IEntity>()
             .Select(entry => entry.Entity)
             .SelectMany(entity =>
             {

@@ -11,7 +11,7 @@ public abstract class Entity : Entity<Guid>
     { }
 }
 
-public abstract class Entity<TPrimaryKey> : IEquatable<Entity<TPrimaryKey>>
+public abstract class Entity<TPrimaryKey> : IEquatable<Entity<TPrimaryKey>>, IEntity
 {
     public virtual TPrimaryKey Id { get; private init; }
 
@@ -57,9 +57,9 @@ public abstract class Entity<TPrimaryKey> : IEquatable<Entity<TPrimaryKey>>
         return Id!.GetHashCode() * 41;
     }
 
-    public static bool operator ==(Entity<TPrimaryKey> first, Entity<TPrimaryKey> second) 
+    public static bool operator ==(Entity<TPrimaryKey> first, Entity<TPrimaryKey> second)
         => first.Equals(second);
 
-    public static bool operator !=(Entity<TPrimaryKey> first, Entity<TPrimaryKey> second) 
+    public static bool operator !=(Entity<TPrimaryKey> first, Entity<TPrimaryKey> second)
         => !first.Equals(second);
 }
