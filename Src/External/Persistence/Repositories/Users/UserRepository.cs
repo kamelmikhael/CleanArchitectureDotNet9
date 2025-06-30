@@ -25,13 +25,10 @@ internal sealed class UserRepository(ApplicationDbContext context)
         int pageSize, 
         CancellationToken cancellationToken = default)
     {
-        UserName userName = UserName.Create(keyword!).Value;
-        Email email = Email.Create(keyword!).Value;
-
         IQueryable<User> query = _dbSet
             .WhereIf(
                 !string.IsNullOrWhiteSpace(keyword),
-                x => x.Username == userName || x.Email == email)
+                x => ((string)x.Username).Contains(keyword!) || ((string)x.Email).Contains(keyword!))
             .AsNoTracking()
             .AsQueryable();
 

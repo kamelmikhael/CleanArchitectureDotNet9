@@ -30,4 +30,6 @@ public sealed class Email : ValueObject
                 )
             )
             .Map(e => new Email(e));
+
+    public static explicit operator string(Email email) => email.Value;
 }

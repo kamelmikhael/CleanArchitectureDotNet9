@@ -29,4 +29,6 @@ public sealed class UserName : ValueObject
                 )
             )
             .Map(n => new UserName(n));
+
+    public static explicit operator string(UserName userName) => userName.Value;
 }
