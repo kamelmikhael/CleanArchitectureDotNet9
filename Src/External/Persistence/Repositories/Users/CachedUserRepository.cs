@@ -1,4 +1,5 @@
 ﻿using Domain.Users;
+using Persistence.Constants;
 using SharedKernal.Abstraction.Caching;
 
 namespace Persistence.Repositories;
@@ -10,13 +11,13 @@ public sealed class CachedUserRepository(
 {
     public override Task<User?> FindAsync(Guid id, CancellationToken cancellationToken = default)
     => cacheService.GetOrCreateAsync(
-            $"User-{id}",
+            CacheKeys.UserById(id),
             async () => await decorated.FindAsync(id, cancellationToken),
             cancellationToken);
 
     public Task<User?> GetByUsernameAsync(UserName username, CancellationToken cancellationToken = default)
     => cacheService.GetOrCreateAsync(
-            $"User-{username.Value}",
+            CacheKeys.UserByUsername(username),
             async () => await decorated.GetByUsernameAsync(username, cancellationToken),
             cancellationToken);
 

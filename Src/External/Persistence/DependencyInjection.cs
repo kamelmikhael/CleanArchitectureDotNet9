@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Persistence.Repositories;
 using Persistence.Repositories.Customers;
 using Persistence.Repositories.Orders;
+using Scrutor;
 using SharedKernal.Abstraction.Data;
 using SharedKernal.Abstractions.Data;
 using SharedKernal.Guards;
@@ -51,12 +52,23 @@ public static class DependencyInjection
 
         services
             .AddScoped(typeof(IRepository<>), typeof(Repository<>))
-            .AddScoped(typeof(IRepository<,>), typeof(Repository<,>))
+            .AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
+            //.AddScoped<IOrderRepository, OrderRepository>()
+            //.AddScoped<ICustomerRepository, CustomerRepository>()
+            //.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        services
             .AddScoped<IUserRepository, UserRepository>()
-            .AddScoped<IOrderRepository, OrderRepository>()
-            .AddScoped<ICustomerRepository, CustomerRepository>()
-            .Decorate<IUserRepository, CachedUserRepository>()
-            .AddScoped<IUnitOfWork, UnitOfWork>();
+            .Decorate<IUserRepository, CachedUserRepository>();
+
+        services.Scan(selector =>
+            selector
+                .FromAssemblies(AssemblyReference.Assembly)
+                .AddClasses(false)
+                .UsingRegistrationStrategy(RegistrationStrategy.Skip)
+                .AsMatchingInterface()
+                .WithScopedLifetime()
+        );
 
         return services;
     }

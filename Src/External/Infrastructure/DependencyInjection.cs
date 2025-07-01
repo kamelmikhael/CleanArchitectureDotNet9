@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Persistence;
 using Security;
+using SharedKernal.Abstraction;
 using SharedKernal.Abstractions;
 
 namespace Infrastructure;
@@ -34,6 +35,7 @@ public static class DependencyInjection
     {
         services.AddScoped<IEventPublisher, EventPublisher>();
         services.AddScoped<IGetOrderByIdService, GetOrderByIdService>();
+        services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 
         return services;
     }
