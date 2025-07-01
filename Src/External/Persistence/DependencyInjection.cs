@@ -9,6 +9,7 @@ using Persistence.Repositories.Customers;
 using Persistence.Repositories.Orders;
 using SharedKernal.Abstraction.Data;
 using SharedKernal.Abstractions.Data;
+using SharedKernal.Guards;
 
 namespace Persistence;
 
@@ -30,6 +31,8 @@ public static class DependencyInjection
         //services.AddSingleton<UpdateAuditableEntitiesInterceptor>();
 
         string? connectionString = configuration.GetConnectionString("Database");
+
+        Ensure.NotEmpty(connectionString);
 
         services.AddDbContext<ApplicationDbContext>(
             (sp, optionsBuilder) =>
