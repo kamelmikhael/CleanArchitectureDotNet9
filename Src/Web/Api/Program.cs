@@ -9,6 +9,9 @@ using Serilog;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
+builder.Host.UseSerilog((context, configuration) =>
+    configuration.ReadFrom.Configuration(context.Configuration));
+
 builder.Services
     .AddInfrastructure(builder.Configuration)
     .AddPresentation(builder.Configuration);
@@ -50,9 +53,6 @@ builder.Services.AddRateLimiter(rateLimiterOptions =>
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 // builder.Services.AddOpenApi();
-
-builder.Host.UseSerilog((context, configuration) =>
-    configuration.ReadFrom.Configuration(context.Configuration));
 
 WebApplication app = builder.Build();
 
