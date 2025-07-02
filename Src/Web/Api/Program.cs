@@ -80,6 +80,6 @@ app.UseRateLimiter();
 
 app.MapCarter();
 
-app.Run();
+await app.RunAsync();
 
 public partial class Program { }

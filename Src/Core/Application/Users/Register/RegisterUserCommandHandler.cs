@@ -22,7 +22,7 @@ internal sealed class RegisterUserCommandHandler(
 
         Result<Email> emailResult = Email.Create(command.Email);
 
-        if (Result.ContainsErrors(out Error[] errors, userNameResult, emailResult))
+        if (Result.TryCheckErrors(out Error[] errors, userNameResult, emailResult))
         {
             return Result.Failure<Guid>(errors);
         }

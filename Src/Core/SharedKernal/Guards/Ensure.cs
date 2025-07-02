@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 
 namespace SharedKernal.Guards;
 
@@ -11,7 +12,7 @@ public static class Ensure
     /// <param name="paramName"></param>
     /// <exception cref="ArgumentException"></exception>
     public static void NotEmpty(
-        string? value,
+        [NotNull] string? value,
         [CallerArgumentExpression(nameof(value))] string? paramName = null)
     {
         if (string.IsNullOrWhiteSpace(value) || string.IsNullOrEmpty(value)) 
@@ -27,7 +28,7 @@ public static class Ensure
     /// <param name="paramName"></param>
     /// <exception cref="ArgumentNullException"></exception>
     public static void NotNull(
-        object? value,
+        [NotNull] object? value,
         [CallerArgumentExpression(nameof(value))] string? paramName = null)
     {
         if (value is null)

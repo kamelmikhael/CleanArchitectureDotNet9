@@ -35,12 +35,24 @@ public class Repository<TEntity, TKey> : IRepository<TEntity, TKey>
         CancellationToken cancellationToken = default)
         => await _dbSet.FindAsync(keyValues, cancellationToken: cancellationToken);
 
-    public async Task<TEntity?> FirstOrDefaultAsync(CancellationToken cancellationToken = default)
+    public virtual async Task<TEntity?> FirstOrDefaultAsync(CancellationToken cancellationToken = default)
         => await _dbSet.FirstOrDefaultAsync(cancellationToken);
 
-    public async Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, 
+    public virtual Task<TResult?> FirstOrDefaultAsync<TResult>(
+        Expression<Func<TEntity, TResult>> selector, 
         CancellationToken cancellationToken = default)
-        => await _dbSet.FirstOrDefaultAsync(predicate, cancellationToken);
+        => _dbSet.Select(selector).FirstOrDefaultAsync(cancellationToken);
+
+    public virtual Task<TEntity?> FirstOrDefaultAsync(
+        Expression<Func<TEntity, bool>> predicate, 
+        CancellationToken cancellationToken = default)
+        => _dbSet.FirstOrDefaultAsync(predicate, cancellationToken);
+
+    public virtual Task<TResult?> FirstOrDefaultAsync<TResult>(
+        Expression<Func<TEntity, TResult>> selector,
+        Expression<Func<TEntity, bool>> predicate,
+        CancellationToken cancellationToken = default) =>
+        _dbSet.Where(predicate).Select(selector).FirstOrDefaultAsync(cancellationToken);
 
     public virtual async Task<IEnumerable<TEntity>> ToListAsync(
         CancellationToken cancellationToken = default)

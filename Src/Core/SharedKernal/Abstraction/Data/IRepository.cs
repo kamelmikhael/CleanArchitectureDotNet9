@@ -16,7 +16,18 @@ public interface IRepository<TEntity, TKey>
 
     Task<TEntity?> FirstOrDefaultAsync(CancellationToken cancellationToken = default);
 
-    Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
+    Task<TResult?> FirstOrDefaultAsync<TResult>(
+        Expression<Func<TEntity, TResult>> selector,
+        CancellationToken cancellationToken = default);
+
+    Task<TEntity?> FirstOrDefaultAsync(
+        Expression<Func<TEntity, bool>> predicate, 
+        CancellationToken cancellationToken = default);
+
+    Task<TResult?> FirstOrDefaultAsync<TResult>(
+        Expression<Func<TEntity, TResult>> selector,
+        Expression<Func<TEntity, bool>> predicate,
+        CancellationToken cancellationToken = default);
 
     Task<IEnumerable<TEntity>> ToListAsync(CancellationToken cancellationToken = default);
 

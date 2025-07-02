@@ -99,7 +99,7 @@ public class Result
         return Success((result1.Value, result2.Value));
     }
 
-    public static bool ContainsErrors(
+    public static bool TryCheckErrors(
         out Error[] errors,
         params Result[] results)
     {
