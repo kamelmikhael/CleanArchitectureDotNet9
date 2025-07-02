@@ -14,10 +14,6 @@ public partial class OutboxMessageConsumerConfiguration : IEntityTypeConfigurati
 
         entity.Property(x => x.Name)
             .IsRequired();
-
-        OnConfigurePartial(entity);
     }
-
-    partial void OnConfigurePartial(EntityTypeBuilder<OutboxMessageConsumer> entity);
 }
 

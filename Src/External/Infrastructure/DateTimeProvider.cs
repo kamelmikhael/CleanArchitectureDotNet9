@@ -2,7 +2,7 @@
 
 namespace Infrastructure;
 
-internal class DateTimeProvider : IDateTimeProvider
+internal sealed class DateTimeProvider : IDateTimeProvider
 {
     public DateTime UtcNow => DateTime.UtcNow;
 }

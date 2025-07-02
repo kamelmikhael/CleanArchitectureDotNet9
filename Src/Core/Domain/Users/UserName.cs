@@ -3,7 +3,7 @@ using SharedKernal.Guards;
 
 namespace Domain.Users;
 
-public sealed class UserName : ValueObject
+public sealed record UserName
 {
     public string Value { get; private set; }
 
@@ -13,11 +13,6 @@ public sealed class UserName : ValueObject
     private UserName(string value)
     {
         Value = value;
-    }
-
-    public override IEnumerable<object> GetAtomicValues()
-    {
-        yield return Value;
     }
 
     public static Result<UserName> Create(string username)

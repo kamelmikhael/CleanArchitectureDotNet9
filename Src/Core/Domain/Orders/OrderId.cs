@@ -1,3 +1,3 @@
 ﻿namespace Domain.Orders;
 
-public record OrderId(Guid Value);
+public sealed record OrderId(Guid Value);

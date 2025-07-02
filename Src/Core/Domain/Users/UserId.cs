@@ -1,3 +1,3 @@
 ﻿namespace Domain.Users;
 
-public record UserId(Guid Value);
+public sealed record UserId(Guid Value);

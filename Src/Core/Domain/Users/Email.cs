@@ -3,7 +3,7 @@ using SharedKernal.Primitives;
 
 namespace Domain.Users;
 
-public sealed class Email : ValueObject
+public sealed record Email
 {
     public string Value { get; private set; }
 
@@ -13,11 +13,6 @@ public sealed class Email : ValueObject
     private Email(string value)
     {
         Value = value;
-    }
-
-    public override IEnumerable<object> GetAtomicValues()
-    {
-        yield return Value;
     }
 
     public static Result<Email> Create(string email)

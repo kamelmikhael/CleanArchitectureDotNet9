@@ -1,3 +1,3 @@
 ﻿namespace Domain.Products;
 
-public record Money(string Currency, decimal Amount);
+public sealed record Money(string Currency, decimal Amount);

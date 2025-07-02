@@ -3,7 +3,7 @@
 /// <summary>
 /// Stock Keeping Unit
 /// </summary>
-public record Sku
+public sealed record Sku
 {
     public const int DefaultLength = 8;
 

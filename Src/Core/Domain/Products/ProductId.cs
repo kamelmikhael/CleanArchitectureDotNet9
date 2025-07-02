@@ -1,3 +1,3 @@
 ﻿namespace Domain.Products;
 
-public record ProductId(Guid Value);
+public sealed record ProductId(Guid Value);

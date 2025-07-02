@@ -5,6 +5,7 @@ using Domain.Users;
 using FluentAssertions;
 using Moq;
 using SharedKernal.Abstraction.EventBus;
+using SharedKernal.Primitives;
 
 namespace Application.UnitTests.Users.Register;
 
@@ -37,7 +38,7 @@ public class RegisterUserCommandHandlerTests
         //Arrange
         var command = new RegisterUserCommand("username", "email@gmail.com", "password");
 
-        var emailResult = Email.Create(command.Email);
+        Result<Email> emailResult = Email.Create(command.Email);
 
         _userRepositoryMock
             .Setup(repo => 
@@ -45,7 +46,7 @@ public class RegisterUserCommandHandlerTests
             .ReturnsAsync(true);
 
         //Act
-        var result = await _handler.Handle(command, CancellationToken.None);
+        Result<Guid> result = await _handler.Handle(command, CancellationToken.None);
 
         //Assert
         result.IsFailure.Should().BeTrue();
@@ -64,7 +65,7 @@ public class RegisterUserCommandHandlerTests
         //Arrange
         var command = new RegisterUserCommand("username", "email@gmail.com", "password");
 
-        var emailResult = Email.Create(command.Email);
+        Result<Email> emailResult = Email.Create(command.Email);
 
         _userRepositoryMock
             .Setup(repo =>
@@ -72,7 +73,7 @@ public class RegisterUserCommandHandlerTests
             .ReturnsAsync(false);
 
         //Act
-        var result = await _handler.Handle(command, CancellationToken.None);
+        Result<Guid> result = await _handler.Handle(command, CancellationToken.None);
 
         //Assert
         result.IsSuccess.Should().BeTrue();

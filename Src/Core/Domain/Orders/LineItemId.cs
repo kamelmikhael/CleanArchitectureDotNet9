@@ -1,3 +1,3 @@
 ﻿namespace Domain.Orders;
 
-public record LineItemId(Guid Value);
+public sealed record LineItemId(Guid Value);
