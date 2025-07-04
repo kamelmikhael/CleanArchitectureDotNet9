@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Mapster.Models;
+using Microsoft.AspNetCore.Http;
 using SharedKernal.Primitives;
 
 namespace Presentation.Extensions;
@@ -33,6 +34,7 @@ public static class ResultExtension
         this Result result
         , string? title = null
         , int? status = null
+        , string? type = null
         , Error[]? errors = null)
     {
         if (result.IsSuccess)
@@ -43,7 +45,7 @@ public static class ResultExtension
         return Results.Problem(
             statusCode: status ?? StatusCodes.Status400BadRequest,
             title: title ?? "Bad Request",
-            type: "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+            type: type ?? "https://tools.ietf.org/html/rfc7231#section-6.5.1",
             extensions: new Dictionary<string, object?>
             {
                 { "errors", errors ?? result.Errors }
@@ -54,6 +56,7 @@ public static class ResultExtension
         this Result<T> result
         , string? title = null
         , int? status = null
+        , string? type = null
         , Error[]? errors = null)
     {
         if (result.IsSuccess)
@@ -64,7 +67,7 @@ public static class ResultExtension
         return Results.Problem(
             statusCode: status ?? StatusCodes.Status400BadRequest,
             title: title ?? "Bad Request",
-            type: "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+            type: type ?? "https://tools.ietf.org/html/rfc7231#section-6.5.1",
             extensions: new Dictionary<string, object?>
             {
                 { "errors", errors ?? result.Errors }
@@ -105,6 +108,7 @@ public static class ResultExtension
         return result.ToProblemDetails(
             "Bad Request",
             StatusCodes.Status400BadRequest,
+            "https://tools.ietf.org/html/rfc7231#section-6.6.1",
             [.. result.Errors.Where(x => x != Error.None)]);
     }
 
@@ -112,8 +116,9 @@ public static class ResultExtension
         this Result result)
     {
         return result.ToProblemDetails(
-            "Not Found Errors",
+            "Not Found",
             StatusCodes.Status404NotFound,
+            "https://tools.ietf.org/html/rfc7231#section-6.5.4",
             [.. result.Errors.Where(x => x.Type == ErrorType.NotFound)]);
     }
 
@@ -127,12 +132,14 @@ public static class ResultExtension
             return result.ToProblemDetails(
                 "Validation Errors"
                 , StatusCodes.Status400BadRequest
+                , "https://tools.ietf.org/html/rfc7231#section-6.5.1"
                 , validationError?.Errors);
         }
 
         return result.ToProblemDetails(
             "Validation Errors"
             , StatusCodes.Status400BadRequest
+            , "https://tools.ietf.org/html/rfc7231#section-6.5.1"
             , [.. result.Errors.Where(x => x.Type == ErrorType.Validation)]);
     }
 
