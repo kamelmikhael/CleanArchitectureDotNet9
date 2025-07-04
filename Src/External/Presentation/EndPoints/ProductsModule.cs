@@ -49,12 +49,12 @@ public class ProductsModule : CarterModule
 
         app.MapPost("/search", async (
             ProductsPagedRequest request
-            , IPagedQueryHandler <GetProductsPaged.Query, ProductsPagedResponse> handler
+            , IQueryHandler<GetProductsPaged.Query, List<ProductsPagedResponse>> handler
             , CancellationToken cancellationToken) =>
         {
             var query = new GetProductsPaged.Query(request);
 
-            PagedResult<ProductsPagedResponse> response = await handler.Handle(query, cancellationToken);
+            Result<List<ProductsPagedResponse>> response = await handler.Handle(query, cancellationToken);
 
             return response.Handle();
         });

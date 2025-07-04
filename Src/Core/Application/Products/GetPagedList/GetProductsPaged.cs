@@ -8,12 +8,12 @@ namespace Application.Products.GetPagedList;
 
 public sealed class GetProductsPaged
 {
-    public sealed record Query(ProductsPagedRequest Input) : IPagedQuery<ProductsPagedResponse>;
+    public sealed record Query(ProductsPagedRequest Input) : IQuery<List<ProductsPagedResponse>>;
 
     public sealed class Handler(
-        IRepository<Product, ProductId> repository) : IPagedQueryHandler<Query, ProductsPagedResponse>
+        IRepository<Product, ProductId> repository) : IQueryHandler<Query, List<ProductsPagedResponse>>
     {
-        public async Task<PagedResult<ProductsPagedResponse>> Handle(Query query, CancellationToken cancellationToken)
+        public async Task<Result<List<ProductsPagedResponse>>> Handle(Query query, CancellationToken cancellationToken)
         {
             (IEnumerable<ProductsPagedResponse>? Products, int totalCount) = await repository.ToPagedListAsync(
                 p => new ProductsPagedResponse(p.Id.Value

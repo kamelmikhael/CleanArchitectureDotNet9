@@ -5,7 +5,7 @@ using SharedKernal.Primitives;
 namespace Application.Users.GetWithPagination;
 
 internal sealed class GetUsersWithPaginationQueryHandler
-    : IPagedQueryHandler<GetUsersWithPaginationQuery, UserPagedResponse>
+    : IQueryHandler<GetUsersWithPaginationQuery, List<UserPagedResponse>>
 {
     private readonly IUserRepository _userRepository;
 
@@ -14,7 +14,7 @@ internal sealed class GetUsersWithPaginationQueryHandler
         _userRepository = userRepository;
     }
 
-    public async Task<PagedResult<UserPagedResponse>> Handle(GetUsersWithPaginationQuery request, CancellationToken cancellationToken)
+    public async Task<Result<List<UserPagedResponse>>> Handle(GetUsersWithPaginationQuery request, CancellationToken cancellationToken)
     {
         (IEnumerable<User> users, int totalCount) = await _userRepository.GetListWithPagingAsync(
             request.Input.Keyword,

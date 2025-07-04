@@ -27,12 +27,12 @@ public class UsersModule : CarterModule
         app.MapPost(
             "/search", async (
             UserPagedRequest input,
-            IPagedQueryHandler<GetUsersWithPaginationQuery, UserPagedResponse> handler,
+            IQueryHandler<GetUsersWithPaginationQuery, List<UserPagedResponse>> handler,
             CancellationToken cancellationToken) =>
             {
                 GetUsersWithPaginationQuery query = new(input);
 
-                PagedResult<UserPagedResponse> result = await handler.Handle(query, cancellationToken);
+                Result<List<UserPagedResponse>> result = await handler.Handle(query, cancellationToken);
 
                 return result.Handle();
             });

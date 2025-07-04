@@ -3,4 +3,4 @@ using SharedKernal.Primitives;
 
 namespace Application.Users.GetWithPagination;
 
-public sealed record GetUsersWithPaginationQuery(UserPagedRequest Input) : IPagedQuery<UserPagedResponse>;
+public sealed record GetUsersWithPaginationQuery(UserPagedRequest Input) : IQuery<List<UserPagedResponse>>;
