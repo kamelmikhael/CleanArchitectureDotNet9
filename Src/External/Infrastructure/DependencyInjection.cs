@@ -33,7 +33,7 @@ public static class DependencyInjection
     private static IServiceCollection AddServices(
         this IServiceCollection services)
     {
-        services.AddScoped<IEventPublisher, EventPublisher>();
+        services.AddScoped<IDomainEventPublisher, DomainEventPublisher>();
         services.AddScoped<IGetOrderByIdService, GetOrderByIdService>();
         services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 

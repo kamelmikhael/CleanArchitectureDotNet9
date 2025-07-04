@@ -14,7 +14,7 @@ public sealed class DeleteProduct
     internal sealed class Handler(
         IRepository<Product, ProductId> repository
         , IUnitOfWork unitOfWork
-        , IEventPublisher publisher) : ICommandHandler<Command>
+        , IDomainEventPublisher publisher) : ICommandHandler<Command>
     {
         public async Task<Result> Handle(Command command, CancellationToken cancellationToken)
         {

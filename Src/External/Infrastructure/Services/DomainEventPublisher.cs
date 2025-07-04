@@ -7,9 +7,9 @@ using SharedKernal.Abstractions;
 
 namespace Infrastructure.Services;
 
-internal sealed class EventPublisher(
-    ILogger<EventPublisher> logger,
-    IServiceProvider serviceProvider) : IEventPublisher
+internal sealed class DomainEventPublisher(
+    ILogger<DomainEventPublisher> logger,
+    IServiceProvider serviceProvider) : IDomainEventPublisher
 {
     public async Task PublishAsync<TEvent>(TEvent domainEvent, CancellationToken cancellationToken = default)
         where TEvent : IDomainEvent
@@ -27,6 +27,12 @@ internal sealed class EventPublisher(
         {
             return;
         }
+
+        //var tasks = handlers
+        //    .Select(handler => handler.HandleAsync(domainEvent, cancellationToken))
+        //    .ToList();
+
+        //await Task.WhenAll(tasks);
 
         foreach (IDomainEventHandler<TEvent> handler in handlers)
         {

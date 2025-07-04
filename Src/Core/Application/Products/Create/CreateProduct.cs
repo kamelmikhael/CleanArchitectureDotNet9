@@ -30,7 +30,7 @@ public sealed class CreateProduct
     internal sealed class Handler(
         IRepository<Product, ProductId> repository,
         IUnitOfWork unitOfWork,
-        IEventPublisher publisher) : ICommandHandler<Command, Guid>
+        IDomainEventPublisher publisher) : ICommandHandler<Command, Guid>
     {
         public async Task<Result<Guid>> Handle(Command command, CancellationToken cancellationToken)
         {

@@ -14,11 +14,11 @@ namespace BackgroundJobs;
 internal sealed class ProcessOutboxMessagesJob : IJob
 {
     private readonly ApplicationDbContext _dbContext;
-    private readonly IEventPublisher _eventPublisher;
+    private readonly IDomainEventPublisher _eventPublisher;
 
     public ProcessOutboxMessagesJob(
         ApplicationDbContext dbContext,
-        IEventPublisher eventPublisher)
+        IDomainEventPublisher eventPublisher)
     {
         _dbContext = dbContext;
         _eventPublisher = eventPublisher;
