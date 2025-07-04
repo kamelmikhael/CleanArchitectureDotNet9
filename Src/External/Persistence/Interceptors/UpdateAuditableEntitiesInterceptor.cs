@@ -4,7 +4,7 @@ using SharedKernal.Abstraction;
 
 namespace Persistence.Interceptors;
 
-public sealed class UpdateAuditableEntitiesInterceptor
+internal sealed class UpdateAuditableEntitiesInterceptor
     : SaveChangesInterceptor
 {
     public override ValueTask<int> SavedChangesAsync(
@@ -14,14 +14,19 @@ public sealed class UpdateAuditableEntitiesInterceptor
     {
         DbContext? dbContext = eventData.Context;
 
-        if (dbContext is null)
+        if (dbContext is not null)
         {
-            return base.SavedChangesAsync(eventData, result, cancellationToken);
+            UpdateAuditableEntities(dbContext);
         }
 
-        var utcNow = DateTime.UtcNow;
+        return base.SavedChangesAsync(eventData, result, cancellationToken);
+    }
 
-        _ = dbContext
+    private void UpdateAuditableEntities(DbContext context)
+    {
+        DateTime utcNow = DateTime.UtcNow;
+
+        _ = context
             .ChangeTracker
             .Entries<IAuditableEntity>()
             .Select(entry =>
@@ -37,7 +42,5 @@ public sealed class UpdateAuditableEntitiesInterceptor
 
                 return entry;
             }).ToList();
-
-        return base.SavedChangesAsync(eventData, result, cancellationToken);
     }
 }

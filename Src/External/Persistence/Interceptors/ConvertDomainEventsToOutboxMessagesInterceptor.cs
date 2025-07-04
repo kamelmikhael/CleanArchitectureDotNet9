@@ -2,13 +2,19 @@
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Newtonsoft.Json;
 using Persistence.Outbox;
+using SharedKernal.Abstraction;
 using SharedKernal.Primitives;
 
 namespace Persistence.Interceptors;
 
-public sealed class ConvertDomainEventsToOutboxMessagesInterceptor
+internal sealed class ConvertDomainEventsToOutboxMessagesInterceptor
     : SaveChangesInterceptor
 {
+    private static readonly JsonSerializerSettings serializerSettings = new()
+    {
+        TypeNameHandling = TypeNameHandling.All
+    };
+
     public override ValueTask<int> SavedChangesAsync(
         SaveChangesCompletedEventData eventData, 
         int result, 
@@ -16,13 +22,20 @@ public sealed class ConvertDomainEventsToOutboxMessagesInterceptor
     {
         DbContext? dbContext = eventData.Context;
 
-        if(dbContext is null)
+        if (dbContext is not null)
         {
-            return base.SavedChangesAsync(eventData, result, cancellationToken);
+            ConvertDomainEventsToOutboxMessages(dbContext);
         }
 
-        var outboxMessages = dbContext.ChangeTracker
-            .Entries<Entity>()
+        return base.SavedChangesAsync(eventData, result, cancellationToken);
+    }
+
+    private void ConvertDomainEventsToOutboxMessages(DbContext context)
+    {
+        DateTime utcNow = DateTime.UtcNow;
+
+        var outboxMessages = context.ChangeTracker
+            .Entries<IEntity>()
             .Select(entry => entry.Entity)
             .SelectMany(entity =>
             {
@@ -38,18 +51,13 @@ public sealed class ConvertDomainEventsToOutboxMessagesInterceptor
                 Type = domainEvent.GetType().Name ?? string.Empty,
                 Content = JsonConvert.SerializeObject(
                     domainEvent,
-                    new JsonSerializerSettings
-                    {
-                        TypeNameHandling = TypeNameHandling.All
-                    }),
-                OccurredOnUtc = DateTime.UtcNow,
+                    serializerSettings),
+                OccurredOnUtc = utcNow,
                 ProcessedOnUtc = null,
                 Error = null,
             })
             .ToList();
 
-        dbContext.Set<OutboxMessage>().AddRange(outboxMessages);
-
-        return base.SavedChangesAsync(eventData, result, cancellationToken);
+        context.Set<OutboxMessage>().AddRange(outboxMessages);
     }
 }

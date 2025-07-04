@@ -4,6 +4,7 @@ using Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Persistence.Interceptors;
 using Persistence.Repositories;
 using Persistence.Repositories.Customers;
 using Persistence.Repositories.Orders;
@@ -28,27 +29,19 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        //services.AddSingleton<ConvertDomainEventsToOutboxMessagesInterceptor>();
-        //services.AddSingleton<UpdateAuditableEntitiesInterceptor>();
+        services.AddSingleton<ConvertDomainEventsToOutboxMessagesInterceptor>();
+        services.AddSingleton<UpdateAuditableEntitiesInterceptor>();
 
         string? connectionString = configuration.GetConnectionString("Database");
 
         Ensure.NotEmpty(connectionString);
 
         services.AddDbContext<ApplicationDbContext>(
-            (sp, optionsBuilder) =>
-            {
-                //var convertDomainEventsToOutboxMessagesInterceptor = 
-                //    sp.GetRequiredService<ConvertDomainEventsToOutboxMessagesInterceptor>();
-
-                //var updateAuditableEntitiesInterceptor = 
-                //    sp.GetRequiredService<UpdateAuditableEntitiesInterceptor>();
-
-                optionsBuilder
-                    .UseSqlServer(connectionString);
-                    //.AddInterceptors(convertDomainEventsToOutboxMessagesInterceptor
-                    //    , updateAuditableEntitiesInterceptor);
-            });
+            (sp, optionsBuilder) => optionsBuilder
+                .UseSqlServer(connectionString)
+                .AddInterceptors(
+                    sp.GetRequiredService<ConvertDomainEventsToOutboxMessagesInterceptor>()
+                    , sp.GetRequiredService<UpdateAuditableEntitiesInterceptor>()));
 
         services
             .AddScoped(typeof(IRepository<>), typeof(Repository<>))
