@@ -34,7 +34,7 @@ public class UsersModule : CarterModule
 
                 PagedResult<UserPagedResponse> result = await handler.Handle(query, cancellationToken);
 
-                return ResultsResponse.Handle(result);
+                return result.Handle();
             });
 
         app.MapPost(
@@ -47,7 +47,7 @@ public class UsersModule : CarterModule
 
             Result<Guid> result = await handler.Handle(command, cancellationToken);
 
-            return ResultsResponse.Handle(result);
+            return result.Handle();
         }); //.AddEndpointFilter<ApiKeyAuthenticationEndpointFilter>();
 
         app.MapPost("/login", async (
@@ -59,7 +59,7 @@ public class UsersModule : CarterModule
 
             Result<string> result = await handler.Handle(command, cancellationToken);
 
-            return ResultsResponse.Handle(result);
+            return result.Handle();
         });
 
         app.MapGet("/{userId:guid}", async (
@@ -70,9 +70,10 @@ public class UsersModule : CarterModule
                 .Create(new GetUserByIdQuery(userId))
                 .Bind(query => handler.Handle(query, cancellationToken))
                 .Match(
-                    ResultsResponse.HandleSuccess,
-                    ResultsResponse.HandleFailure)
-                );
+                    (result) => result.HandleSuccess(),
+                    (result) => result.HandleFailure()
+                )
+        );
     }
 
     public sealed record RegisterUserRequest(

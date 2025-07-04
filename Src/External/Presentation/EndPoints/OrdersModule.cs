@@ -35,9 +35,10 @@ public class OrdersModule : CarterModule
                 .Create(new RemoveLineItemCommand(new(orderId), new(lineItemId)))
                 .Bind(query => handler.Handle(query, cancellationToken))
                 .Match(
-                    ResultsResponse.HandleSuccess,
-                    ResultsResponse.HandleFailure)
-                );
+                    (result) => result.HandleSuccess(),
+                    (result) => result.HandleFailure()
+                )
+        );
 
         app.MapGet("/{orderId:guid}", async (
             Guid orderId,
@@ -47,9 +48,10 @@ public class OrdersModule : CarterModule
                 .Create(new GetOrderByIdQuery(new(orderId)))
                 .Bind(query => handler.Handle(query, cancellationToken))
                 .Match(
-                    ResultsResponse.HandleSuccess,
-                    ResultsResponse.HandleFailure)
-                );
+                    (result) => result.HandleSuccess(),
+                    (result) => result.HandleFailure()
+                )
+        );
 
         app.MapPost("/", async (
             CreateOrderRequest request,
@@ -59,9 +61,10 @@ public class OrdersModule : CarterModule
                 .Create(new CreateOrderCommand(new(request.CustomerId)))
                 .Bind(query => handler.Handle(query, cancellationToken))
                 .Match(
-                    ResultsResponse.HandleSuccess,
-                    ResultsResponse.HandleFailure)
-                );
+                    (result) => result.HandleSuccess(),
+                    (result) => result.HandleFailure()
+                )
+        );
         //.RequireRateLimiting("fixed");
 
         app.MapPut("/{id:guid}/line-items", async (Guid id
@@ -72,8 +75,9 @@ public class OrdersModule : CarterModule
                 .Create(new AddLineItemCommand(new(id), new(request.ProductId), request.Qty))
                 .Bind(query => handler.Handle(query, cancellationToken))
                 .Match(
-                    ResultsResponse.HandleSuccess,
-                    ResultsResponse.HandleFailure)
-                );
+                    (result) => result.HandleSuccess(),
+                    (result) => result.HandleFailure()
+                )
+        );
     }
 }

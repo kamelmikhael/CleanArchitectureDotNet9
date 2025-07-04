@@ -70,4 +70,77 @@ public static class ResultExtension
                 { "errors", errors ?? result.Errors }
             });
     }
+
+    public static IResult Handle(
+        this Result result)
+    {
+        if (result is { IsSuccess: true })
+        {
+            return result.HandleSuccess();
+        }
+
+        return result.HandleFailure();
+    }
+
+    public static IResult HandleSuccess(
+        this Result result)
+    {
+        result.ClearErrors();
+
+        return Results.Ok(result);
+    }
+
+    public static IResult HandleFailure(
+        this Result result)
+    {
+        if (result.Errors.Any(x => x.Type == ErrorType.Validation))
+        {
+            return result.HandleValidation();
+        }
+        else if (result.Errors.Any(x => x.Type == ErrorType.NotFound))
+        {
+            return result.HandleNotFound();
+        }
+
+        return result.ToProblemDetails(
+            "Bad Request",
+            StatusCodes.Status400BadRequest,
+            [.. result.Errors.Where(x => x != Error.None)]);
+    }
+
+    public static IResult HandleNotFound(
+        this Result result)
+    {
+        return result.ToProblemDetails(
+            "Not Found Errors",
+            StatusCodes.Status404NotFound,
+            [.. result.Errors.Where(x => x.Type == ErrorType.NotFound)]);
+    }
+
+    public static IResult HandleValidation(
+        this Result result)
+    {
+        var validationError = result.Errors.FirstOrDefault() as ValidationError;
+
+        if (validationError?.Errors?.Length > 0)
+        {
+            return result.ToProblemDetails(
+                "Validation Errors"
+                , StatusCodes.Status400BadRequest
+                , validationError?.Errors);
+        }
+
+        return result.ToProblemDetails(
+            "Validation Errors"
+            , StatusCodes.Status400BadRequest
+            , [.. result.Errors.Where(x => x.Type == ErrorType.Validation)]);
+    }
+
+    public static IResult HandleNoContent(
+        this Result result)
+    {
+        result.ClearErrors();
+
+        return Results.NoContent();
+    }
 }

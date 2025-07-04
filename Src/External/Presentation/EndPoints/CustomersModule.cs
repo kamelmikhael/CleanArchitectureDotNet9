@@ -25,8 +25,9 @@ public class CustomersModule : CarterModule
                 .Create(request.Adapt<CreateCustomerCommand>())
                 .Bind(query => handler.Handle(query, cancellationToken))
                 .Match(
-                    ResultsResponse.HandleSuccess,
-                    ResultsResponse.HandleFailure)
-                );
+                    (result) => result.HandleSuccess(),
+                    (result) => result.HandleFailure()
+                )
+        );
     }
 }

@@ -31,8 +31,10 @@ public class ProductsModule : CarterModule
                 .Create(requset.Adapt<CreateProduct.Command>())
                 .Bind(command => handler.Handle(command, cancellationToken))
                 .Match(
-                    ResultsResponse.HandleSuccess,
-                    ResultsResponse.HandleFailure));
+                    (result) => result.HandleSuccess(),
+                    (result) => result.HandleFailure()
+                )
+        );
 
         app.MapGet("/", async (
             IQueryHandler<GetProductList.Query, List<GetProductListResponse>?> handler
@@ -40,8 +42,10 @@ public class ProductsModule : CarterModule
                 .Create(new GetProductList.Query())
                 .Bind(query => handler.Handle(query, cancellationToken))
                 .Match(
-                    ResultsResponse.HandleSuccess,
-                    ResultsResponse.HandleFailure));
+                    (result) => result.HandleSuccess(),
+                    (result) => result.HandleFailure()
+                )
+        );
 
         app.MapPost("/search", async (
             ProductsPagedRequest request
@@ -52,7 +56,7 @@ public class ProductsModule : CarterModule
 
             PagedResult<ProductsPagedResponse> response = await handler.Handle(query, cancellationToken);
 
-            return ResultsResponse.Handle(response);
+            return response.Handle();
         });
 
         app.MapDelete("/{id:guid}", async (
@@ -62,8 +66,10 @@ public class ProductsModule : CarterModule
                 .Create(new DeleteProduct.Command(id))
                 .Bind(command => handler.Handle(command, cancellationToken))
                 .Match(
-                    ResultsResponse.HandleSuccess,
-                    ResultsResponse.HandleFailure));
+                    (result) => result.HandleSuccess(),
+                    (result) => result.HandleFailure()
+                )
+        );
 
         app.MapPut("/{id:guid}", async (
             Guid id
@@ -73,7 +79,9 @@ public class ProductsModule : CarterModule
                 .Create(new UpdateProduct.Command(id, request.Name))
                 .Bind(command => handler.Handle(command, cancellationToken))
                 .Match(
-                    ResultsResponse.HandleSuccess,
-                    ResultsResponse.HandleFailure));
+                    (result) => result.HandleSuccess(),
+                    (result) => result.HandleFailure()
+                )
+        );
     }
 }
