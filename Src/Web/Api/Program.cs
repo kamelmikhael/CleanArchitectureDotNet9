@@ -68,13 +68,13 @@ if (app.Environment.IsDevelopment())
 // used to log HTTP Api request coming to Our ASP API
 app.UseSerilogRequestLogging();
 
+app.UseGlobalExceptionHandler();
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
 
 app.UseAuthorization();
-
-app.UseMiddleware<GlobalExceptionHandlingMiddleWare>();
 
 app.UseRateLimiter();
 

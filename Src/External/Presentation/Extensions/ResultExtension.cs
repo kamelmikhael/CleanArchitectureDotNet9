@@ -28,4 +28,46 @@ public static class ResultExtension
             ? onSuccess(result)
             : onFailure(result);
     }
+
+    public static IResult ToProblemDetails(
+        this Result result
+        , string? title = null
+        , int? status = null
+        , Error[]? errors = null)
+    {
+        if (result.IsSuccess)
+        {
+            throw new InvalidOperationException("Can't convert success result to problem details");
+        }
+
+        return Results.Problem(
+            statusCode: status ?? StatusCodes.Status400BadRequest,
+            title: title ?? "Bad Request",
+            type: "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+            extensions: new Dictionary<string, object?>
+            {
+                { "errors", errors ?? result.Errors }
+            });
+    }
+
+    public static IResult ToProblemDetails<T>(
+        this Result<T> result
+        , string? title = null
+        , int? status = null
+        , Error[]? errors = null)
+    {
+        if (result.IsSuccess)
+        {
+            throw new InvalidOperationException("Can't convert success result to problem details");
+        }
+
+        return Results.Problem(
+            statusCode: status ?? StatusCodes.Status400BadRequest,
+            title: title ?? "Bad Request",
+            type: "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+            extensions: new Dictionary<string, object?>
+            {
+                { "errors", errors ?? result.Errors }
+            });
+    }
 }

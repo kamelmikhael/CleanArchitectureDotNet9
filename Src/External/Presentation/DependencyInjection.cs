@@ -1,4 +1,5 @@
 ﻿using Carter;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Presentation.MiddleWares;
@@ -11,13 +12,22 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddTransient<GlobalExceptionHandlingMiddleWare>();
-
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
 
         services.AddCarter();
 
+        services.AddExceptionHandler<GlobalExceptionHandler>();
+        services.AddProblemDetails();
+
         return services;
+    }
+
+    public static IApplicationBuilder UseGlobalExceptionHandler(this IApplicationBuilder app)
+    {
+        // app.UseMiddleware<GlobalExceptionHandlingMiddleWare>();
+        app.UseExceptionHandler();
+
+        return app;
     }
 }
