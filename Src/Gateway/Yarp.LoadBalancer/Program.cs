@@ -21,4 +21,4 @@ app.MapReverseProxy();
 
 app.MapHealthChecks("health");
 
-app.Run();
+await app.RunAsync();

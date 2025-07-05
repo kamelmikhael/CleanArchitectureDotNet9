@@ -1,16 +1,17 @@
 using System.Threading.RateLimiting;
+using Api.Middelware;
 using Carter;
 using Infrastructure;
 using Microsoft.AspNetCore.RateLimiting;
-using Presentation;
 using Persistence.Extensions;
+using Presentation;
 using Presentation.MiddleWares;
 using Serilog;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-builder.Host.UseSerilog((context, configuration) =>
-    configuration.ReadFrom.Configuration(context.Configuration));
+builder.Host.UseSerilog((context, loggerConfig) =>
+    loggerConfig.ReadFrom.Configuration(context.Configuration));
 
 builder.Services
     .AddInfrastructure(builder.Configuration)
@@ -71,6 +72,8 @@ app.UseSerilogRequestLogging();
 app.UseGlobalExceptionHandler();
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<RequestLogContextMiddelware>();
 
 app.UseAuthentication();
 
