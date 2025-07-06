@@ -1,5 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  
   <ItemGroup>
+    <PackageReference Include="Asp.Versioning.Http" />
     <PackageReference Include="Carter" />
     <PackageReference Include="Mapster" />
     <PackageReference Include="Swashbuckle.AspNetCore" />

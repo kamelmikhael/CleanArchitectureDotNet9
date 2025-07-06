@@ -45,7 +45,18 @@ public class ProductsModule : CarterModule
                     (result) => result.HandleSuccess(),
                     (result) => result.HandleFailure()
                 )
-        );
+        ).MapToApiVersion(1);
+
+        app.MapGet("/", async (
+            IQueryHandler<GetProductList.Query, List<GetProductListResponse>?> handler
+            , CancellationToken cancellationToken) => await Result
+                .Create(new GetProductList.Query())
+                .Bind(query => handler.Handle(query, cancellationToken))
+                .Match(
+                    (result) => result.HandleSuccess(),
+                    (result) => result.HandleFailure()
+                )
+        ).MapToApiVersion(2);
 
         app.MapPost("/search", async (
             ProductsPagedRequest request
