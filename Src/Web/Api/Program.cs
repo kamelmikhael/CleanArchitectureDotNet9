@@ -1,7 +1,9 @@
 using System.Threading.RateLimiting;
 using Api.Middelware;
 using Carter;
+using HealthChecks.UI.Client;
 using Infrastructure;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.RateLimiting;
 using Persistence.Extensions;
 using Presentation;
@@ -66,12 +68,12 @@ if (app.Environment.IsDevelopment())
     app.ApplyMigrations();
 }
 
+app.UseHttpsRedirection();
+
 // used to log HTTP Api request coming to Our ASP API
 app.UseSerilogRequestLogging();
 
 app.UseGlobalExceptionHandler();
-
-app.UseHttpsRedirection();
 
 app.UseMiddleware<RequestLogContextMiddelware>();
 
@@ -80,6 +82,11 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseRateLimiter();
+
+app.MapHealthChecks("health", new HealthCheckOptions
+{
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
 
 app.MapCarter();
 
