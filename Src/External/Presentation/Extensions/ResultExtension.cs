@@ -104,12 +104,12 @@ public static class ResultExtension
         {
             return result.HandleNotFound();
         }
+        else if (result.Errors.Any(x => x.Type == ErrorType.Conflict))
+        {
+            return result.HandleConflict();
+        }
 
-        return result.ToProblemDetails(
-            "Bad Request",
-            StatusCodes.Status400BadRequest,
-            "https://tools.ietf.org/html/rfc7231#section-6.6.1",
-            [.. result.Errors.Where(x => x != Error.None)]);
+        return result.HandleOtherTypes();
     }
 
     public static IResult HandleNotFound(
@@ -143,11 +143,23 @@ public static class ResultExtension
             , [.. result.Errors.Where(x => x.Type == ErrorType.Validation)]);
     }
 
-    public static IResult HandleNoContent(
+    public static IResult HandleConflict(
         this Result result)
     {
-        result.ClearErrors();
+        return result.ToProblemDetails(
+            "Bad Request",
+            StatusCodes.Status409Conflict,
+            "https://tools.ietf.org/html/rfc7231#section-6.5.8",
+            [.. result.Errors.Where(x => x.Type == ErrorType.Conflict)]);
+    }
 
-        return Results.NoContent();
+    public static IResult HandleOtherTypes(
+        this Result result)
+    {
+        return result.ToProblemDetails(
+                    "Bad Request",
+                    StatusCodes.Status400BadRequest,
+                    "https://tools.ietf.org/html/rfc7231#section-6.6.1",
+                    [.. result.Errors.Where(x => x != Error.None)]);
     }
 }
