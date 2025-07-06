@@ -58,6 +58,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yarp.LoadBalancer", "Src\Ga
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.IntegrationTests", "Tests\Application.IntegrationTests\Application.IntegrationTests.csproj", "{369C1CB9-4FD6-48A5-AA79-0E56A4E0B799}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api.FunctionalTests", "Tests\Api.FunctionalTests\Api.FunctionalTests.csproj", "{F3B33207-671A-4E3A-9B19-3A887B21367C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -136,6 +138,10 @@ Global
 		{369C1CB9-4FD6-48A5-AA79-0E56A4E0B799}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{369C1CB9-4FD6-48A5-AA79-0E56A4E0B799}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{369C1CB9-4FD6-48A5-AA79-0E56A4E0B799}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3B33207-671A-4E3A-9B19-3A887B21367C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3B33207-671A-4E3A-9B19-3A887B21367C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3B33207-671A-4E3A-9B19-3A887B21367C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3B33207-671A-4E3A-9B19-3A887B21367C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -163,6 +169,7 @@ Global
 		{AE961FC1-C3FA-420A-AFAE-5877C17F5B8C} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{60317F59-247D-4438-97BC-4040BAD7BAE4} = {AE961FC1-C3FA-420A-AFAE-5877C17F5B8C}
 		{369C1CB9-4FD6-48A5-AA79-0E56A4E0B799} = {A6D7105F-8BAD-4AF3-8C27-BF9A36C35D33}
+		{F3B33207-671A-4E3A-9B19-3A887B21367C} = {A6D7105F-8BAD-4AF3-8C27-BF9A36C35D33}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9E140349-28EC-43CB-8403-F007DE6114B0}

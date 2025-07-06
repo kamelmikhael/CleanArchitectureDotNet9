@@ -35,7 +35,7 @@ public static class DependencyInjection
     {
         services.AddScoped<IDomainEventPublisher, DomainEventPublisher>();
         services.AddScoped<IGetOrderByIdService, GetOrderByIdService>();
-        services.AddScoped<IDateTimeProvider, DateTimeProvider>();
+        services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
 
         return services;
     }
