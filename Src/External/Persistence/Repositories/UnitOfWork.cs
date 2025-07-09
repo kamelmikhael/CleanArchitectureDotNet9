@@ -8,21 +8,13 @@ internal sealed class UnitOfWork(ApplicationDbContext context)
     : IUnitOfWork, IDisposable
 {
     public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-    {
-        return context.SaveChangesAsync(cancellationToken);
-    }
+        => context.SaveChangesAsync(cancellationToken);
 
     public int SaveChanges()
-    {
-        return context.SaveChanges();
-    }
+        => context.SaveChanges();
 
     public IDbTransaction BeginTransaction()
-    {
-        IDbContextTransaction transaction = context.Database.BeginTransaction();
-
-        return transaction.GetDbTransaction();
-    }
+        => context.Database.BeginTransaction().GetDbTransaction();
 
     public void Dispose() 
         => context.Dispose();
