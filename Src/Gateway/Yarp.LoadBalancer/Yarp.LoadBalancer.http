@@ -1,6 +1,14 @@
 @Yarp.LoadBalancer_HostAddress = http://localhost:5002
+@AccessToken = CfDJ8IXULspNkulEq8LhqQQDh6bs2nv_76LC9OrG_nuJ-lJd5KiTIT74WyMt3jOks5_kMWFrUPMJkQZ6mw1XPWoew-cLluiGGMdlC6Hdruu1PwPRXgo5CtPpSnpJEks9ios-INK2i3PVlwIwQayTknhZIznlZYInmcK4LuGHYYvarfYKSO_7TKwigHvElfnASUNOajDaOhs0WCn69Uxf5wAIP03rIV-SLX0_vBfBePlxHvx8jpVx_iz40P12tpHKQG-WHuRiU-6L77o3hTsFWaSwflzQMBk2nj1zSq0xZbu3G4HhVx2MniU1uwwmD4y2pq6NxQ
 
 GET {{Yarp.LoadBalancer_HostAddress}}/weatherforecast/
 Accept: application/json
 
-###
+### Login
+
+GET {{Yarp.LoadBalancer_HostAddress}}/login/
+
+### hello
+
+GET {{Yarp.LoadBalancer_HostAddress}}/hello/
+Authorization: Bearer {{AccessToken}}
