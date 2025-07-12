@@ -120,4 +120,31 @@ public static class ResultExtensions
 
         return result;
     }
+
+    public static Result<TOut> TryCatch<TIn, TOut>(
+        this Result<TIn> result,
+        Func<TIn, TOut> func,
+        Error error)
+    {
+        try
+        {
+            return result.IsSuccess
+                ? func(result.Value)
+                : Result.Failure<TOut>(result.Errors);
+        }
+        catch
+        {
+            return Result.Failure<TOut>(error);
+        }
+    }
+
+    public static TOut Match<TIn, TOut>(
+        this Result<TIn> result,
+        Func<TIn, TOut> onSuccess, 
+        Func<Error[], TOut> onFailure)
+    {
+        return result.IsSuccess
+            ? onSuccess(result.Value)
+            : onFailure(result.Errors);
+    }
 }

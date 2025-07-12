@@ -26,6 +26,7 @@ public static class DependencyInjection
             busConfigurator.SetKebabCaseEndpointNameFormatter();
 
             busConfigurator.AddConsumer<UserRegisteredEventBusConsumer>();
+            //busConfigurator.AddConsumers(typeof(DependencyInjection).Assembly);
 
             busConfigurator.UsingRabbitMq((context, configurator) =>
             {
